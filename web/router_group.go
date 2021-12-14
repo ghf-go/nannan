@@ -70,6 +70,11 @@ func (r *RouterGroup) run(w http.ResponseWriter, req *http.Request, i int, args 
 		if i+1 < al {
 			path := strings.Join(args[i+1:], "/")
 			if f, o := urls[path]; o {
+				defer func() {
+					if e := recover();e != nil{
+						error404(w, req)
+					}
+				}()
 				f(&EngineCtx{
 					ReqID: time.Now().UnixNano(),
 					Req:   req,
