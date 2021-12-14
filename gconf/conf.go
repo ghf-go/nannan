@@ -81,6 +81,17 @@ func (conf GConf) GetPath() string {
 func (conf GConf) GetArgs(name string) string {
 	return conf.args.Get(name)
 }
+func (conf GConf) GetArgInt(name string) int {
+	s := conf.args.Get(name)
+	if s == ""{
+		return 0
+	}
+	r ,e := strconv.Atoi(s)
+	if e != nil{
+		return 0
+	}
+	return r
+}
 func (conf GConf) GetBase() string {
 	return conf._base
 }
