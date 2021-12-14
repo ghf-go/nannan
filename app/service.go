@@ -27,7 +27,7 @@ func service(args []string)  {
 		if _,ok := _serviceMap[args[0]];ok{
 			_,p,_,_ := runtime.Caller(1)
 			s := drivers.SystemService{
-				Cmd: p,
+				Cmd: fmt.Sprintf("%s service %s",p,args[0]),
 				Name: args[0],
 				Desc: args[0],
 			}
