@@ -12,6 +12,7 @@ type CrontabDriver struct {
 	IsLock bool
 	Cmd string
 	Timer string
+	CallFunc func()
 }
 
 func (c CrontabDriver) ListAll()  {
@@ -56,6 +57,22 @@ func (c CrontabDriver) Save(){
 		news = append(news,fmt.Sprintf("%s flock -xn %s.lock -c '%s'",c.Timer,c.Cmd,c.Cmd))
 	}else{
 		news = append(news,fmt.Sprintf("%s %s",c.Timer,c.Cmd))
+	}
+	ioutil.WriteFile(cf,[]byte(strings.Join(news,"\n")),fs.ModePerm)
+}
+func (c CrontabDriver) Remove(){
+	u,_:=user.Current()
+	news := []string{}
+	cf := fmt.Sprintf("/var/spool/cron/%s",u.Username)
+	b,e := ioutil.ReadFile(cf)
+	if e == nil{
+		cs := string(b)
+		lines := strings.Split(cs,"\n")
+		for _,line := range lines{
+			if strings.Index(line,c.Cmd) < 0{
+				news = append(news,line)
+			}
+		}
 	}
 	ioutil.WriteFile(cf,[]byte(strings.Join(news,"\n")),fs.ModePerm)
 }

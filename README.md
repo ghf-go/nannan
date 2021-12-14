@@ -1,6 +1,9 @@
 # nannan
 
 # 配置
+## 全局配置
+### web服务
+> os.Setenv("app.web",":80") //监听80端口
 ## 缓存设置
 ### memcache 配置
 > os.Setenv("key","memcache://")
