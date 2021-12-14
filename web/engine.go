@@ -11,8 +11,9 @@ type EngineCtx struct {
 	ReqID int64
 	Req   *http.Request
 	Rep   http.ResponseWriter
-	ip string
+	ip    string
 }
+
 // 输出JSON
 func (engine *EngineCtx) json(code int, msg string, data interface{}) error {
 	ret := map[string]interface{}{
@@ -26,21 +27,25 @@ func (engine *EngineCtx) json(code int, msg string, data interface{}) error {
 	}
 	return e
 }
+
 //输出错误的json
 func (engine *EngineCtx) JsonFail(code int, msg string) error {
 	return engine.json(code, msg, nil)
 }
+
 //输出正确的json
 func (engine *EngineCtx) JsonSuccess(data interface{}) error {
 	return engine.json(0, "", data)
 }
+
 //显示网页
-func (engine *EngineCtx) Display(tpl string,data interface{}) error{
+func (engine *EngineCtx) Display(tpl string, data interface{}) error {
 	return nil
 }
+
 // 获取IP
-func (engine *EngineCtx) GetIP()string{
-	if engine.ip != ""{
+func (engine *EngineCtx) GetIP() string {
+	if engine.ip != "" {
 		return engine.ip
 	}
 	xForwardedFor := engine.Req.Header.Get("X-Forwarded-For")

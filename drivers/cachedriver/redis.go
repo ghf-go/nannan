@@ -15,14 +15,14 @@ func NewRedisCacheDriver(redis *redis.Client) *RedisCacheDriver {
 }
 
 func (r *RedisCacheDriver) Del(key ...string) bool {
-	return r.redis.Del(context.Background(),key...).Err() == nil
+	return r.redis.Del(context.Background(), key...).Err() == nil
 }
 func (r *RedisCacheDriver) Set(key, val string) bool {
-	return r.redis.Set(context.Background(),key,val,time.Hour * 86400 * 365).Err() == nil
+	return r.redis.Set(context.Background(), key, val, time.Hour*86400*365).Err() == nil
 }
 func (r *RedisCacheDriver) Get(key string) string {
-	return r.redis.Get(context.Background(),key).Val()
+	return r.redis.Get(context.Background(), key).Val()
 }
-func (r *RedisCacheDriver) SetX(key, val string, timeout int) bool{
-	return r.redis.Set(context.Background(),key,val,time.Second * time.Duration(timeout)).Err() == nil
+func (r *RedisCacheDriver) SetX(key, val string, timeout int) bool {
+	return r.redis.Set(context.Background(), key, val, time.Second*time.Duration(timeout)).Err() == nil
 }

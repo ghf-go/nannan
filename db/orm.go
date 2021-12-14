@@ -17,73 +17,74 @@ const (
 	_cokumn_name = "column"
 )
 
-func saveObj(rows *sql.Rows,obj interface{}) error  {
+func saveObj(rows *sql.Rows, obj interface{}) error {
 	t := reflect.TypeOf(obj)
-	if t.Kind() != reflect.Ptr || t.Elem().Kind() != reflect.Struct{
+	if t.Kind() != reflect.Ptr || t.Elem().Kind() != reflect.Struct {
 		return errors.New("保存对象必须是指针对象")
 	}
 	t = t.Elem()
 	val := reflect.ValueOf(obj).Elem()
-	columns ,e := rows.Columns()
-	if e != nil{
+	columns, e := rows.Columns()
+	if e != nil {
 		return e
 	}
-	fm := _getColumMapByType(columns,t)
+	fm := _getColumMapByType(columns, t)
 	ln := len(columns)
 	defer rows.Close()
-	if !rows.Next(){
-		e := _saveRow(rows,ln,fm,t,val)
-		if e != nil{
+	if !rows.Next() {
+		e := _saveRow(rows, ln, fm, t, val)
+		if e != nil {
 			return e
 		}
 		return nil
-	}else{
+	} else {
 		return errors.New("保存对象必须是指针对象")
 	}
 }
-func saveObjList(rows *sql.Rows,obj interface{}) error  {
+func saveObjList(rows *sql.Rows, obj interface{}) error {
 	t := reflect.TypeOf(obj)
-	if t.Kind() != reflect.Ptr || t.Elem().Kind() != reflect.Slice{
+	if t.Kind() != reflect.Ptr || t.Elem().Kind() != reflect.Slice {
 		return errors.New("保存对象必须是指针数组")
 	}
 	isRef := false
 	var tarObj reflect.Type
-	if t.Elem().Elem().Kind() == reflect.Ptr{
+	if t.Elem().Elem().Kind() == reflect.Ptr {
 		isRef = true
 		tarObj = t.Elem().Elem().Elem()
-	}else{
+	} else {
 		tarObj = t.Elem().Elem()
 	}
-	columns ,e := rows.Columns()
-	if e != nil{
+	columns, e := rows.Columns()
+	if e != nil {
 		return e
 	}
-	fm := _getColumMapByType(columns,t)
+	fm := _getColumMapByType(columns, t)
 	ln := len(columns)
 	defer rows.Close()
 	ret := []reflect.Value{}
-	for rows.Next(){
+	for rows.Next() {
 		val := reflect.New(tarObj)
-		e := _saveRow(rows,ln,fm,t,val)
-		if e != nil{
+		e := _saveRow(rows, ln, fm, t, val)
+		if e != nil {
 			return e
 		}
-		if isRef{
-			ret = append(ret,val.Addr())
-		}else{
-			ret = append(ret,val)
+		if isRef {
+			ret = append(ret, val.Addr())
+		} else {
+			ret = append(ret, val)
 		}
 
 	}
-	a2 := reflect.Append(reflect.ValueOf(obj).Elem(),ret...)
+	a2 := reflect.Append(reflect.ValueOf(obj).Elem(), ret...)
 	reflect.ValueOf(obj).Elem().Set(a2)
 	return nil
 }
+
 //获取对象的字段名字列表
 func getObjFields(obj interface{}) []string {
 	ret := []string{}
 	t := reflect.TypeOf(obj)
-	for{
+	for {
 		switch t.Kind() {
 		case reflect.Ptr:
 			t = t.Elem()
@@ -97,10 +98,10 @@ func getObjFields(obj interface{}) []string {
 		}
 	}
 	fnum := t.NumField()
-	for i := 0 ;i < fnum;i++{
+	for i := 0; i < fnum; i++ {
 		tag := t.Field(i).Tag.Get(_cokumn_name)
-		if tag != ""{
-			ret = append(ret,tag)
+		if tag != "" {
+			ret = append(ret, tag)
 		}
 	}
 	return ret
@@ -108,7 +109,7 @@ func getObjFields(obj interface{}) []string {
 func getObjFieldStr(obj interface{}) string {
 	ret := []string{}
 	t := reflect.TypeOf(obj)
-	for{
+	for {
 		switch t.Kind() {
 		case reflect.Ptr:
 			t = t.Elem()
@@ -122,23 +123,24 @@ func getObjFieldStr(obj interface{}) string {
 		}
 	}
 	fnum := t.NumField()
-	for i := 0 ;i < fnum;i++{
+	for i := 0; i < fnum; i++ {
 		tag := t.Field(i).Tag.Get(_cokumn_name)
-		if tag != ""{
-			ret = append(ret,tag)
+		if tag != "" {
+			ret = append(ret, tag)
 		}
 	}
-	return fmt.Sprintf("`%s`",strings.Join(ret,"`,`"))
+	return fmt.Sprintf("`%s`", strings.Join(ret, "`,`"))
 }
+
 //保存数据
-func _saveRow(rows *sql.Rows,cl int,fm map[int]int,t reflect.Type,obj reflect.Value)  error {
+func _saveRow(rows *sql.Rows, cl int, fm map[int]int, t reflect.Type, obj reflect.Value) error {
 	args := []interface{}{}
-	for i:= 0;i < cl;i++{
-		if indx,ok := fm[i];ok{
-			if strings.HasSuffix(t.Field(indx).Type.String() , "time.Time"){
+	for i := 0; i < cl; i++ {
+		if indx, ok := fm[i]; ok {
+			if strings.HasSuffix(t.Field(indx).Type.String(), "time.Time") {
 				var iv time.Time
-				args = append(args,&iv)
-			}else {
+				args = append(args, &iv)
+			} else {
 				switch t.Field(indx).Type.Kind() {
 				case reflect.Int:
 					var vv int
@@ -181,27 +183,27 @@ func _saveRow(rows *sql.Rows,cl int,fm map[int]int,t reflect.Type,obj reflect.Va
 					args = append(args, &vv)
 				}
 			}
-		}else{
+		} else {
 			var vv interface{}
-			args = append(args,&vv)
+			args = append(args, &vv)
 		}
 	}
 	e := rows.Scan(args...)
-	if e != nil{
+	if e != nil {
 		return e
 	}
-	for ci,i:=range fm{
+	for ci, i := range fm {
 		obj.Field(i).Set(reflect.ValueOf(args[ci]))
 	}
 	return nil
 }
-func _getColumMapByType(columns []string,t reflect.Type) map[int]int{
+func _getColumMapByType(columns []string, t reflect.Type) map[int]int {
 	ret := map[int]int{}
 	fn := t.NumField()
-	for i:= 0 ; i< fn ; i++{
+	for i := 0; i < fn; i++ {
 		tag := t.Field(i).Tag.Get(_cokumn_name)
-		for ind,nm := range columns{
-			if nm == tag{
+		for ind, nm := range columns {
+			if nm == tag {
 				ret[ind] = i
 			}
 		}

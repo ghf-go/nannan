@@ -10,5 +10,5 @@ func (t *Table) TableName() string {
 }
 
 func (t *Table) InsertMap(data Data) int64 {
-	return t.InsertByMap(t.table,data)
+	return t.InsertByMap(t.table, data)
 }

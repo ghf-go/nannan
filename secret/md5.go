@@ -20,6 +20,7 @@ func MD5Byte(data []byte) []byte {
 	h.Write(data)
 	return h.Sum(nil)
 }
+
 // MD5File 文件md5
 func MD5File(path string) string {
 	data, e := ioutil.ReadFile(path)

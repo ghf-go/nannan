@@ -83,11 +83,11 @@ func (conf GConf) GetArgs(name string) string {
 }
 func (conf GConf) GetArgInt(name string) int {
 	s := conf.args.Get(name)
-	if s == ""{
+	if s == "" {
 		return 0
 	}
-	r ,e := strconv.Atoi(s)
-	if e != nil{
+	r, e := strconv.Atoi(s)
+	if e != nil {
 		return 0
 	}
 	return r
