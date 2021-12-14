@@ -30,9 +30,9 @@ func RegisterRouterGroup(prefix string, funcName func(group *RouterGroup)) {
 func (r *Router) RegisterRouterGroup(prefix string, funcName func(group *RouterGroup)) {
 	group := &RouterGroup{}
 	funcName(group)
-	if strings.HasSuffix(prefix, "/") {
-		prefix = prefix[:-1]
-	}
+	//if strings.HasSuffix(prefix, "/") {
+	//	prefix = prefix[:-1]
+	//}
 	if !strings.HasPrefix(prefix, "/") {
 		prefix = "/" + prefix
 	}

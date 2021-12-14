@@ -14,9 +14,9 @@ func (r *RouterGroup) resetPath(path string) string {
 	if strings.HasPrefix(path, "/") {
 		path = path[1:]
 	}
-	if strings.HasSuffix(path, "/") {
-		path = path[:-1]
-	}
+	//if strings.HasSuffix(path, "/") {
+	//	path = path[:-1]
+	//}
 	return path
 }
 func (r *RouterGroup) POST(path string, funcName func(ctx *EngineCtx) error) {
