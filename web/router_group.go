@@ -71,7 +71,7 @@ func (r *RouterGroup) run(w http.ResponseWriter, req *http.Request, i int, args 
 			path := strings.Join(args[i+1:], "/")
 			if f, o := urls[path]; o {
 				defer func() {
-					if e := recover();e != nil{
+					if e := recover(); e != nil {
 						error404(w, req)
 					}
 				}()
