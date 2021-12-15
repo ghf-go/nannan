@@ -2,7 +2,6 @@ package web
 
 import (
 	"encoding/json"
-	"github.com/ghf-go/nannan/app"
 	"github.com/ghf-go/nannan/glog"
 	"github.com/ghf-go/nannan/secret"
 	"net/http"
@@ -30,20 +29,14 @@ func runMiddleWare(engine *EngineCtx ,handle func(*EngineCtx)){
 		h := engine.rep.Header()
 		for k,v := range engine.header{
 			for _,vv := range v{
-				app.Debug("end  set header %s -> %s",k,vv)
 				h.Set(k,vv)
 			}
 		}
-	}else{
-		app.Debug("end not set header")
 	}
 	if engine.cookies != nil{
 		for _,c := range engine.cookies{
-			app.Debug("end： 设置 cookie %v",c)
 			http.SetCookie(engine.rep,c)
 		}
-	}else{
-		app.Debug("end： 没有设置COOKIE")
 	}
 	if engine.httpCode != 0{
 		engine.rep.WriteHeader(engine.httpCode)
@@ -71,44 +64,41 @@ func JWTMiddleWare(engine *EngineCtx ,handle func(*EngineCtx)){
 		if e == nil{
 			token = c.Value
 		}else{
-			app.Debug("JWT 获取COOKIE 错误 %s",e.Error())
+			glog.AppDebug("JWT 获取COOKIE 错误 %s",e.Error())
 		}
 	}
 	if token != ""{
 		src,e := aes.Decode(token)
 		if e == nil{
-			data := map[string]interface{}{}
-			e = json.Unmarshal([]byte(src),data)
+			d1 := make(map[string]interface{})
+			e = json.Unmarshal([]byte(src),d1)
 			if e == nil{
-				if ep,ok := data["expire"];ok{
+				if ep,ok := d1["expire"];ok{
 					if time.Now().UnixNano() <= ep.(int64){
-						delete(data,"expire")
-						engine.Session = data
+						delete(d1,"expire")
+						engine.Session = d1
 					}
 				}
 			}else{
-				app.Debug("JWT JSON decode 错误 %s",e.Error())
+				glog.AppDebug("JWT JSON decode 错误 %s -> (%s)",e.Error(),src)
 			}
 		}else{
-			app.Debug("JWT Aes DECODE 错误 %s",e.Error())
+			glog.AppDebug("JWT Aes DECODE 错误 %s",e.Error())
 		}
 	}
 	handle(engine)
 
-	engine.Session["expire"] = time.Now().Add(tExpire).UnixNano()
+	engine.Session["expire"] = time.Now().Add(tExpire)
 	outJosn ,e:= json.Marshal(engine.Session)
-	glog.Debug("jwt JSON ENCODE %s",string(outJosn))
 	if e == nil{
 		token , e := aes.Encode(string(outJosn))
 		if e == nil{
-			app.Debug("jwt AES ENCODE %s",token)
 			engine.Header().Add(tname,token)
 			engine.SetCookie(&http.Cookie{Name: tname,Value: token,Expires: time.Now().Add(tExpire),Path: "/"})
-			app.Debug("jwt SET %s",token)
 		}else{
-			app.Debug("JWT Aes encode 错误 %s",e.Error())
+			glog.AppDebug("JWT Aes encode 错误 %s",e.Error())
 		}
 	}else{
-		app.Debug("JWT json encode 错误 %s",e.Error())
+		glog.AppDebug("JWT json encode 错误 %s",e.Error())
 	}
 }

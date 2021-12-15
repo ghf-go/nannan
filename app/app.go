@@ -3,7 +3,6 @@ package app
 import (
 	"fmt"
 	"github.com/ghf-go/nannan/web"
-	"log"
 	"os"
 	"strings"
 )
@@ -27,6 +26,3 @@ func Run() {
 	}
 }
 
-func Debug(format string ,args ...interface{})  {
-	log.Printf(format,args...)
-}

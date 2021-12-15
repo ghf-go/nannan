@@ -1,7 +1,7 @@
 package web
 
 import (
-	"github.com/ghf-go/nannan/app"
+	"github.com/ghf-go/nannan/glog"
 	"net/http"
 	"strings"
 	"time"
@@ -63,12 +63,12 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 			if group, ok := r.data[gdir]; ok {
 				engineCtx.GroupPath = gdir
 				engineCtx.NodePath = strings.Join(arr[i+1:],"/")
-				app.Debug("程序分组 %s  -> %s",gdir ,engineCtx.NodePath)
+				glog.AppDebug("程序分组 %s  -> %s",gdir ,engineCtx.NodePath)
 				group.run(engineCtx)
 				return
 			}
 		}
-		app.Debug("没有找到分组 %v",r.data)
+		glog.AppDebug("没有找到分组 %v",r.data)
 		error404(engineCtx)
 	})
 
