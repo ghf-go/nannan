@@ -64,7 +64,7 @@ func JWTMiddleWare(engine *EngineCtx ,handle func(*EngineCtx)){
 		if e == nil{
 			token = c.Value
 		}else{
-			glog.AppDebug("JWT 获取COOKIE 错误 %s",e.Error())
+			//glog.AppDebug("JWT 获取COOKIE 错误 %s",e.Error())
 		}
 	}
 	if token != ""{
