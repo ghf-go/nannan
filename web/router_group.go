@@ -13,7 +13,7 @@ func (r *RouterGroup) resetPath(path string) string {
 		path = path[1:]
 	}
 	if strings.HasSuffix(path, "/") {
-		path = strings.TrimSuffix(path,"/")
+		path = strings.TrimSuffix(path, "/")
 	}
 	return path
 }

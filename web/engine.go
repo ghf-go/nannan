@@ -18,8 +18,8 @@ type EngineCtx struct {
 	rep       http.ResponseWriter
 	ip        string
 	GroupPath string
-	NodePath string
-	Session map[string]interface{}
+	NodePath  string
+	Session   map[string]interface{}
 	_get_data url.Values
 }
 
@@ -32,7 +32,7 @@ func (engine *EngineCtx) json(code int, msg string, data interface{}) error {
 	}
 	b, e := json.Marshal(ret)
 	if e == nil {
-		engine.Header().Set("Content-Type","application/json; charset=utf-8")
+		engine.Header().Set("Content-Type", "application/json; charset=utf-8")
 		engine.Write(b)
 	}
 	return e

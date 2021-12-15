@@ -13,8 +13,8 @@ var (
 func WebStart() {
 	_newHandle.Handle("/", _router)
 	server := &http.Server{
-		Addr:    os.Getenv("app.web"),
-		Handler: _newHandle,
+		Addr:     os.Getenv("app.web"),
+		Handler:  _newHandle,
 		ErrorLog: log.Default(),
 	}
 	server.ListenAndServe()

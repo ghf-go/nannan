@@ -49,10 +49,10 @@ func error404(engineCtx *EngineCtx) {
 
 func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	engineCtx := &EngineCtx{
-		gresponse:&gresponse{},
-		ReqID: time.Now().UnixNano(),
-		Req:   req,
-		rep:   w,
+		gresponse: &gresponse{},
+		ReqID:     time.Now().UnixNano(),
+		Req:       req,
+		rep:       w,
 	}
 	runMiddleWare(engineCtx, func(ctx *EngineCtx) {
 		path := ctx.Req.URL.Path[1:]
@@ -62,13 +62,13 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 			gdir += v + "/"
 			if group, ok := r.data[gdir]; ok {
 				engineCtx.GroupPath = gdir
-				engineCtx.NodePath = strings.Join(arr[i+1:],"/")
+				engineCtx.NodePath = strings.Join(arr[i+1:], "/")
 				//glog.AppDebug("程序分组 %s  -> %s",gdir ,engineCtx.NodePath)
 				group.run(engineCtx)
 				return
 			}
 		}
-		glog.AppDebug("没有找到分组 %v",r.data)
+		glog.AppDebug("没有找到分组 %v", r.data)
 		error404(engineCtx)
 	})
 
