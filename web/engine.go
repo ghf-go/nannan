@@ -12,9 +12,10 @@ import (
 )
 
 type EngineCtx struct {
+	*gresponse
 	ReqID     int64
 	Req       *http.Request
-	Rep       http.ResponseWriter
+	rep       http.ResponseWriter
 	ip        string
 	GroupPath string
 	NodePath string
@@ -31,7 +32,7 @@ func (engine *EngineCtx) json(code int, msg string, data interface{}) error {
 	}
 	b, e := json.Marshal(ret)
 	if e == nil {
-		engine.Rep.Write(b)
+		engine.Write(b)
 	}
 	return e
 }

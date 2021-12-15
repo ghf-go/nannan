@@ -40,15 +40,16 @@ func (r *Router) RegisterRouterGroup(prefix string, funcName func(group *RouterG
 	r.data[prefix] = group
 }
 func error404(engineCtx *EngineCtx) {
-	//engineCtx.Rep.WriteHeader(404)
-	engineCtx.Rep.Write([]byte("12312"))
+	engineCtx.ReturnStatusCode(404)
+	engineCtx.Write([]byte("12312"))
 }
 
 func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	engineCtx := &EngineCtx{
+		gresponse:&gresponse{},
 		ReqID: time.Now().UnixNano(),
 		Req:   req,
-		Rep:   w,
+		rep:   w,
 	}
 	runMiddleWare(engineCtx, func(ctx *EngineCtx) {
 		path := ctx.Req.URL.Path[1:]

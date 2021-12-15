@@ -24,6 +24,30 @@ func runMiddleWare(engine *EngineCtx ,handle func(*EngineCtx)){
 		handle(engine)
 	}
 	_runMiddle(engine,handle,0)
+
+	if engine.header != nil{
+		h := engine.rep.Header()
+		for k,v := range engine.header{
+			for _,vv := range v{
+				glog.Debug("end  set header %s -> %s",k,vv)
+				h.Set(k,vv)
+			}
+		}
+	}else{
+		glog.Debug("end not set header")
+	}
+	if engine.cookies != nil{
+		for _,c := range engine.cookies{
+			glog.Debug("end： 设置 cookie %v",c)
+			http.SetCookie(engine.rep,c)
+		}
+	}else{
+		glog.Debug("end： 没有设置COOKIE")
+	}
+	if engine.httpCode != 0{
+		engine.rep.WriteHeader(engine.httpCode)
+	}
+	engine.rep.Write(engine.buf.Bytes())
 }
 func _runMiddle(engine *EngineCtx ,handle func(*EngineCtx),i int)  {
 	m := _middleWare[i]
@@ -77,8 +101,8 @@ func JWTMiddleWare(engine *EngineCtx ,handle func(*EngineCtx)){
 		token , e := aes.Encode(string(outJosn))
 		if e == nil{
 			glog.Debug("jwt AES ENCODE %s",token)
-			engine.Rep.Header().Add(tname,token)
-			http.SetCookie(engine.Rep,&http.Cookie{Name: tname,Value: token,Expires: time.Now().Add(tExpire),Path: "/"})
+			engine.Header().Add(tname,token)
+			engine.SetCookie(&http.Cookie{Name: tname,Value: token,Expires: time.Now().Add(tExpire),Path: "/"})
 			glog.Debug("jwt SET %s",token)
 		}else{
 			glog.Error("JWT Aes encode 错误 %s",e.Error())
