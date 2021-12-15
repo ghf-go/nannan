@@ -1,6 +1,7 @@
 package web
 
 import (
+	"log"
 	"net/http"
 	"os"
 )
@@ -14,6 +15,7 @@ func WebStart() {
 	server := &http.Server{
 		Addr:    os.Getenv("app.web"),
 		Handler: _newHandle,
+		ErrorLog: log.Default(),
 	}
 	server.ListenAndServe()
 }
