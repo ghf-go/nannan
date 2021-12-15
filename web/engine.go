@@ -16,6 +16,9 @@ type EngineCtx struct {
 	Req       *http.Request
 	Rep       http.ResponseWriter
 	ip        string
+	GroupPath string
+	NodePath string
+	Session map[string]interface{}
 	_get_data url.Values
 }
 

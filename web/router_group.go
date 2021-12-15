@@ -1,9 +1,7 @@
 package web
 
 import (
-	"net/http"
 	"strings"
-	"time"
 )
 
 type RouterGroup struct {
@@ -64,24 +62,16 @@ func (r *RouterGroup) ANY(path string, funcName func(ctx *EngineCtx) error) {
 		r.data["ANY"][r.resetPath(path)] = funcName
 	}
 }
-func (r *RouterGroup) run(w http.ResponseWriter, req *http.Request, i int, args []string) {
-	if urls, ok := r.data[req.Method]; ok {
-		al := len(args)
-		if i+1 < al {
-			path := strings.Join(args[i+1:], "/")
-			if f, o := urls[path]; o {
-				defer func() {
-					if e := recover(); e != nil {
-						error404(w, req)
-					}
-				}()
-				f(&EngineCtx{
-					ReqID: time.Now().UnixNano(),
-					Req:   req,
-					Rep:   w,
-				})
-			}
+func (r *RouterGroup) run(engineCtx *EngineCtx) {
+	if urls, ok := r.data[engineCtx.Req.Method]; ok {
+		if f, o := urls[engineCtx.NodePath]; o {
+			defer func() {
+				if e := recover(); e != nil {
+					error404(engineCtx)
+				}
+			}()
+			f(engineCtx)
 		}
 	}
-	error404(w, req)
+	error404(engineCtx)
 }

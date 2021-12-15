@@ -16,7 +16,7 @@ func Debug(format string, args ...interface{}) {
 }
 func Error(format string, args ...interface{}) {
 	for _, l := range _logs {
-		l.Fatalf(" Error "+format, args...)
+		l.Printf(" Error "+format, args...)
 	}
 }
 func Info(format string, args ...interface{}) {

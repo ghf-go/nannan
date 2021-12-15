@@ -43,6 +43,6 @@ func crontab(args []string) {
 			fmt.Printf("%s 服务不存在", args[0])
 		}
 	default:
-		fmt.Printf("参数错误 -> %s crontab sername [init|remove|check]", os.Args[0])
+		fmt.Printf("参数错误 -> %s crontab sername [save|remove|check]", os.Args[0])
 	}
 }

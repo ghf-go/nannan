@@ -3,6 +3,7 @@ package web
 import (
 	"net/http"
 	"strings"
+	"time"
 )
 
 type Router struct {
@@ -38,20 +39,31 @@ func (r *Router) RegisterRouterGroup(prefix string, funcName func(group *RouterG
 	}
 	r.data[prefix] = group
 }
-func error404(w http.ResponseWriter, req *http.Request) {
-	w.WriteHeader(404)
+func error404(engineCtx *EngineCtx) {
+	//engineCtx.Rep.WriteHeader(404)
+	engineCtx.Rep.Write([]byte("12312"))
 }
 
 func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
-	path := req.URL.Path[1:]
-	arr := strings.Split(path, "/")
-	gdir := "/"
-	for i, v := range arr {
-		gdir += v + "/"
-		if group, ok := r.data[gdir]; ok {
-			group.run(w, req, i, arr)
-			return
-		}
+	engineCtx := &EngineCtx{
+		ReqID: time.Now().UnixNano(),
+		Req:   req,
+		Rep:   w,
 	}
-	error404(w, req)
+	runMiddleWare(engineCtx, func(ctx *EngineCtx) {
+		path := ctx.Req.URL.Path[1:]
+		arr := strings.Split(path, "/")
+		gdir := "/"
+		for i, v := range arr {
+			gdir += v + "/"
+			if group, ok := r.data[gdir]; ok {
+				engineCtx.GroupPath = gdir
+				engineCtx.NodePath = strings.Join(arr[i+1:],"/")
+				group.run(engineCtx)
+				return
+			}
+		}
+		error404(engineCtx)
+	})
+
 }

@@ -1,5 +1,26 @@
 # nannan
-
+# 使用
+## CLI
+> 注册
+> app.RegisterCli(name string, callfunc func([]string))
+> 运行 main cli cliname
+## Crontanb
+> 注册
+> app.RegisterCrontan(name, timer string, isLock bool, callfunc func())
+> 运行 main crontab  name [save|remove|check]
+> save 保存计划任务
+> remove 删除计划任务
+> check 查看计划任务
+## Service
+> 注册
+> RegisterService(name string, callfunc func())
+> 编译程序后执行 main service servicename [install|uninstall|start|stop|restart]
+> install 安装服务
+> uninstall 删除服务
+> start 启动服务
+> stop 关闭服务
+## Web
+> 程序编译之后直接运行即可，默认是web应用
 # 配置
 ## 全局配置
 ### web服务
