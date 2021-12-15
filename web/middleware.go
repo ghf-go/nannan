@@ -2,6 +2,7 @@ package web
 
 import (
 	"encoding/json"
+	"github.com/ghf-go/nannan/app"
 	"github.com/ghf-go/nannan/glog"
 	"github.com/ghf-go/nannan/secret"
 	"net/http"
@@ -29,20 +30,20 @@ func runMiddleWare(engine *EngineCtx ,handle func(*EngineCtx)){
 		h := engine.rep.Header()
 		for k,v := range engine.header{
 			for _,vv := range v{
-				glog.Debug("end  set header %s -> %s",k,vv)
+				app.Debug("end  set header %s -> %s",k,vv)
 				h.Set(k,vv)
 			}
 		}
 	}else{
-		glog.Debug("end not set header")
+		app.Debug("end not set header")
 	}
 	if engine.cookies != nil{
 		for _,c := range engine.cookies{
-			glog.Debug("end： 设置 cookie %v",c)
+			app.Debug("end： 设置 cookie %v",c)
 			http.SetCookie(engine.rep,c)
 		}
 	}else{
-		glog.Debug("end： 没有设置COOKIE")
+		app.Debug("end： 没有设置COOKIE")
 	}
 	if engine.httpCode != 0{
 		engine.rep.WriteHeader(engine.httpCode)
@@ -70,7 +71,7 @@ func JWTMiddleWare(engine *EngineCtx ,handle func(*EngineCtx)){
 		if e == nil{
 			token = c.Value
 		}else{
-			glog.Error("JWT 获取COOKIE 错误 %s",e.Error())
+			app.Debug("JWT 获取COOKIE 错误 %s",e.Error())
 		}
 	}
 	if token != ""{
@@ -86,10 +87,10 @@ func JWTMiddleWare(engine *EngineCtx ,handle func(*EngineCtx)){
 					}
 				}
 			}else{
-				glog.Error("JWT JSON decode 错误 %s",e.Error())
+				app.Debug("JWT JSON decode 错误 %s",e.Error())
 			}
 		}else{
-			glog.Error("JWT Aes DECODE 错误 %s",e.Error())
+			app.Debug("JWT Aes DECODE 错误 %s",e.Error())
 		}
 	}
 	handle(engine)
@@ -100,14 +101,14 @@ func JWTMiddleWare(engine *EngineCtx ,handle func(*EngineCtx)){
 	if e == nil{
 		token , e := aes.Encode(string(outJosn))
 		if e == nil{
-			glog.Debug("jwt AES ENCODE %s",token)
+			app.Debug("jwt AES ENCODE %s",token)
 			engine.Header().Add(tname,token)
 			engine.SetCookie(&http.Cookie{Name: tname,Value: token,Expires: time.Now().Add(tExpire),Path: "/"})
-			glog.Debug("jwt SET %s",token)
+			app.Debug("jwt SET %s",token)
 		}else{
-			glog.Error("JWT Aes encode 错误 %s",e.Error())
+			app.Debug("JWT Aes encode 错误 %s",e.Error())
 		}
 	}else{
-		glog.Error("JWT json encode 错误 %s",e.Error())
+		app.Debug("JWT json encode 错误 %s",e.Error())
 	}
 }

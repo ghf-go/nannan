@@ -9,6 +9,7 @@ var (
 func RegisterLogger(l *log.Logger) {
 	_logs = append(_logs, l)
 }
+
 func Debug(format string, args ...interface{}) {
 	for _, l := range _logs {
 		l.Printf(" DEBUG "+format, args...)
