@@ -1,6 +1,7 @@
 package web
 
 import (
+	"github.com/ghf-go/nannan/glog"
 	"net/http"
 	"strings"
 	"time"
@@ -29,10 +30,12 @@ func RegisterRouterGroup(prefix string, funcName func(group *RouterGroup)) {
 
 //注册群组
 func (r *Router) RegisterRouterGroup(prefix string, funcName func(group *RouterGroup)) {
-	group := &RouterGroup{}
+	group := &RouterGroup{
+		data: map[string]map[string]func(ctx *EngineCtx) error{},
+	}
 	funcName(group)
-	if strings.HasSuffix(prefix, "/") {
-		prefix = strings.TrimSuffix(prefix,"/")
+	if !strings.HasSuffix(prefix, "/") {
+		prefix += "/"
 	}
 	if !strings.HasPrefix(prefix, "/") {
 		prefix = "/" + prefix
@@ -41,7 +44,7 @@ func (r *Router) RegisterRouterGroup(prefix string, funcName func(group *RouterG
 }
 func error404(engineCtx *EngineCtx) {
 	engineCtx.ReturnStatusCode(404)
-	engineCtx.Write([]byte("12312"))
+	engineCtx.Write([]byte("页面不存在"))
 }
 
 func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
@@ -60,10 +63,12 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 			if group, ok := r.data[gdir]; ok {
 				engineCtx.GroupPath = gdir
 				engineCtx.NodePath = strings.Join(arr[i+1:],"/")
+				glog.Debug("程序分组 %s  -> %s",gdir ,engineCtx.NodePath)
 				group.run(engineCtx)
 				return
 			}
 		}
+		glog.Debug("没有找到分组 %v",r.data)
 		error404(engineCtx)
 	})
 

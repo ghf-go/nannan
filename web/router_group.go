@@ -71,6 +71,7 @@ func (r *RouterGroup) run(engineCtx *EngineCtx) {
 				}
 			}()
 			f(engineCtx)
+			return
 		}
 	}
 	error404(engineCtx)
