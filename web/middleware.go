@@ -71,13 +71,14 @@ func JWTMiddleWare(engine *EngineCtx ,handle func(*EngineCtx)){
 		src,e := aes.Decode(token)
 		if e == nil{
 			d1 := make(map[string]interface{})
-			e = json.Unmarshal([]byte(src),d1)
+			e = json.Unmarshal([]byte(src),&d1)
 			if e == nil{
 				if ep,ok := d1["expire"];ok{
-					if time.Now().UnixNano() <= ep.(int64){
+					if time.Now().Unix() <= int64(ep.(float64)){
 						delete(d1,"expire")
 						engine.Session = d1
 					}
+
 				}
 			}else{
 				glog.AppDebug("JWT JSON decode 错误 %s -> (%s)",e.Error(),src)
@@ -88,7 +89,7 @@ func JWTMiddleWare(engine *EngineCtx ,handle func(*EngineCtx)){
 	}
 	handle(engine)
 
-	engine.Session["expire"] = time.Now().Add(tExpire)
+	engine.Session["expire"] = time.Now().Add(tExpire).Unix()
 	outJosn ,e:= json.Marshal(engine.Session)
 	if e == nil{
 		token , e := aes.Encode(string(outJosn))
