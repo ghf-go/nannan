@@ -74,5 +74,16 @@ func (r *RouterGroup) run(engineCtx *EngineCtx) {
 			return
 		}
 	}
+	if urls, ok := r.data["ANY"]; ok {
+		if f, o := urls[engineCtx.NodePath]; o {
+			defer func() {
+				if e := recover(); e != nil {
+					error404(engineCtx)
+				}
+			}()
+			f(engineCtx)
+			return
+		}
+	}
 	error404(engineCtx)
 }
