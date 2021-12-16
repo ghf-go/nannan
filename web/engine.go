@@ -14,13 +14,13 @@ import (
 
 type EngineCtx struct {
 	*gresponse
+	session
 	ReqID     int64
 	Req       *http.Request
 	rep       http.ResponseWriter
 	ip        string
 	GroupPath string
 	NodePath  string
-	Session   map[string]interface{}
 	_get_data url.Values
 }
 

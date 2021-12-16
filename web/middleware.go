@@ -58,7 +58,7 @@ func JWTMiddleWare(engine *EngineCtx, handle func(*EngineCtx)) {
 	aes := secret.Aes("987yhjnbgzkdlopf")
 	tExpire := time.Second * 86400 * 365
 	token := engine.Req.Header.Get(tname)
-	engine.Session = map[string]interface{}{}
+	engine.session = session{}
 	if token == "" {
 		c, e := engine.Req.Cookie(tname)
 		if e == nil {
@@ -70,13 +70,13 @@ func JWTMiddleWare(engine *EngineCtx, handle func(*EngineCtx)) {
 	if token != "" {
 		src, e := aes.Decode(token)
 		if e == nil {
-			d1 := make(map[string]interface{})
+			d1 := make(session)
 			e = json.Unmarshal([]byte(src), &d1)
 			if e == nil {
 				if ep, ok := d1["expire"]; ok {
 					if time.Now().Unix() <= int64(ep.(float64)) {
 						delete(d1, "expire")
-						engine.Session = d1
+						engine.session = d1
 					}
 
 				}
@@ -88,9 +88,8 @@ func JWTMiddleWare(engine *EngineCtx, handle func(*EngineCtx)) {
 		}
 	}
 	handle(engine)
-
-	engine.Session["expire"] = time.Now().Add(tExpire).Unix()
-	outJosn, e := json.Marshal(engine.Session)
+	engine.SetSession("expire",time.Now().Add(tExpire).Unix())
+	outJosn, e := json.Marshal(engine.session)
 	if e == nil {
 		token, e := aes.Encode(string(outJosn))
 		if e == nil {
