@@ -9,8 +9,6 @@ import (
 	"strings"
 )
 
-
-
 type Data map[string]interface{}
 type DBCon struct {
 	db *sql.DB

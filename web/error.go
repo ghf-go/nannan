@@ -6,16 +6,15 @@ import (
 
 type _error struct {
 	Code int
-	Msg string
+	Msg  string
 }
 
-func Error(code int ,msg string)  {
+func Error(code int, msg string) {
 	panic(_error{
 		Code: code,
-		Msg: msg,
+		Msg:  msg,
 	})
 }
-
 
 func is_error(v interface{}) bool {
 	t := reflect.TypeOf(v)

@@ -39,7 +39,7 @@ func IsDateTime(datetime string) bool {
 	return _regDateTime.MatchString(datetime)
 }
 
-func IsWxOpenID(openid string) bool  {
+func IsWxOpenID(openid string) bool {
 
 	return openid[:1] == "o" && len(openid) == 29
 }

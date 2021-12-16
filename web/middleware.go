@@ -88,7 +88,7 @@ func JWTMiddleWare(engine *EngineCtx, handle func(*EngineCtx)) {
 		}
 	}
 	handle(engine)
-	engine.SetSession("expire",time.Now().Add(tExpire).Unix())
+	engine.SetSession("expire", time.Now().Add(tExpire).Unix())
 	outJosn, e := json.Marshal(engine.session)
 	if e == nil {
 		token, e := aes.Encode(string(outJosn))

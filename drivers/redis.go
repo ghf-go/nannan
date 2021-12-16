@@ -24,6 +24,7 @@ func GetRedisByKey(confName string) *redis.Client {
 	}
 	panic("redis参数错误")
 }
+
 // 获取redis
 func GetRedis(conf gconf.GConf) *redis.Client {
 	if conf.GetScheme() != "redis" {

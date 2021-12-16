@@ -8,12 +8,13 @@ import (
 
 var (
 	_redisConf = "default"
-	_dbConf = "default"
+	_dbConf    = "default"
 )
-func RegisterDBName(dbConf string)  {
+
+func RegisterDBName(dbConf string) {
 	_dbConf = dbConf
 }
-func RegisterRedisName(redisConfName string)  {
+func RegisterRedisName(redisConfName string) {
 	_redisConf = redisConfName
 }
 func GetRedis() *redis.Client {
@@ -22,9 +23,9 @@ func GetRedis() *redis.Client {
 func GetDB() *db.DBCon {
 	return db.GetDB(_dbConf)
 }
-func GetTable(table string) (*db.Table) {
+func GetTable(table string) *db.Table {
 	return GetDB().Table(table)
 }
-func CreateQuery(table string) (*db.Query) {
+func CreateQuery(table string) *db.Query {
 	return GetDB().Table(table).CreateQuery()
 }

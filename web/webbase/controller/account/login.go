@@ -1,8 +1,8 @@
 package account
 
-func LoginAction()  {
-	
+func LoginAction() {
+
 }
-func LoginByWxAction()  {
-	
+func LoginByWxAction() {
+
 }

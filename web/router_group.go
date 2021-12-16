@@ -65,11 +65,11 @@ func (r *RouterGroup) ANY(path string, funcName func(ctx *EngineCtx) error) {
 func (r *RouterGroup) run(engineCtx *EngineCtx) {
 	defer func() {
 		if e := recover(); e != nil {
-			if is_error(e){
+			if is_error(e) {
 				e2 := e.(_error)
-				engineCtx.JsonFail(e2.Code,e2.Msg)
-			}else{
-				engineCtx.JsonFail(500,e.(error).Error())
+				engineCtx.JsonFail(e2.Code, e2.Msg)
+			} else {
+				engineCtx.JsonFail(500, e.(error).Error())
 			}
 		}
 	}()
