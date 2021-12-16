@@ -4,14 +4,12 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"github.com/ghf-go/nannan/drivers"
 	_ "github.com/go-sql-driver/mysql"
-	"os"
 	"strings"
 )
 
-var (
-	_dbs = map[string]*sql.DB{}
-)
+
 
 type Data map[string]interface{}
 type DBCon struct {
@@ -20,20 +18,9 @@ type DBCon struct {
 }
 
 func GetDB(conName string) *DBCon {
-	if db, ok := _dbs[conName]; ok {
-		return &DBCon{
-			db: db,
-		}
+	return &DBCon{
+		db: drivers.GetDBCon(conName),
 	}
-	db, e := sql.Open("mysql", os.Getenv("db."+conName))
-	if e != nil {
-		panic(e)
-	}
-	ret := &DBCon{
-		db: db,
-	}
-	_dbs[conName] = db
-	return ret
 }
 func (dbc *DBCon) Close() {
 	dbc.Commit()

@@ -14,6 +14,16 @@ var (
 	_redisSentinelMap = map[string]*redis.Client{}
 )
 
+func GetRedisByKey(confName string) *redis.Client {
+	conf := gconf.GetConf("cache." + confName)
+	switch conf.GetScheme() {
+	case "redis":
+		return GetRedis(conf)
+	case "redis_sentinel":
+		return GetRedisSentinel(conf)
+	}
+	panic("redis参数错误")
+}
 // 获取redis
 func GetRedis(conf gconf.GConf) *redis.Client {
 	if conf.GetScheme() != "redis" {

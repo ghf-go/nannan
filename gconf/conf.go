@@ -24,6 +24,9 @@ var (
 	ErrorConf    = errors.New("配置错误")
 )
 
+func GetRawConf(confName string) string  {
+	return os.Getenv(confName)
+}
 //  GetConf 获取配置
 func GetConf(confName string) GConf {
 	if r, ok := _confmap[confName]; ok {

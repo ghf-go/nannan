@@ -63,24 +63,24 @@ func (r *RouterGroup) ANY(path string, funcName func(ctx *EngineCtx) error) {
 	}
 }
 func (r *RouterGroup) run(engineCtx *EngineCtx) {
+	defer func() {
+		if e := recover(); e != nil {
+			if is_error(e){
+				e2 := e.(_error)
+				engineCtx.JsonFail(e2.Code,e2.Msg)
+			}else{
+				engineCtx.JsonFail(500,e.(error).Error())
+			}
+		}
+	}()
 	if urls, ok := r.data[engineCtx.Req.Method]; ok {
 		if f, o := urls[engineCtx.NodePath]; o {
-			defer func() {
-				if e := recover(); e != nil {
-					error404(engineCtx)
-				}
-			}()
 			f(engineCtx)
 			return
 		}
 	}
 	if urls, ok := r.data["ANY"]; ok {
 		if f, o := urls[engineCtx.NodePath]; o {
-			defer func() {
-				if e := recover(); e != nil {
-					error404(engineCtx)
-				}
-			}()
 			f(engineCtx)
 			return
 		}
