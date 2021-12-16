@@ -3,6 +3,7 @@ package web
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/ghf-go/nannan/verify"
 	"net"
 	"net/http"
 	"net/url"
@@ -111,35 +112,35 @@ func (engine *EngineCtx) Verify(obj interface{}) {
 					Error(errCode,rk + "参数必填")
 				}
 			case "email":
-				if !IsEmail(sv) {
+				if !verify.IsEmail(sv) {
 					Error(errCode,rk + "参数必须是邮箱地址")
 				}
 			case "mobile":
-				if !IsMobile(sv) {
+				if !verify.IsMobile(sv) {
 					Error(errCode,rk + "参数必须是手机号")
 				}
 			case "date":
-				if !IsDate(sv) {
+				if !verify.IsDate(sv) {
 					Error(errCode,rk + "参数必须是日期")
 				}
 			case "time":
-				if !IsTime(sv) {
+				if !verify.IsTime(sv) {
 					Error(errCode,rk + "参数必须是时间")
 				}
 			case "datetime":
-				if !IsDateTime(sv) {
+				if !verify.IsDateTime(sv) {
 					Error(errCode,rk + "参数必须是日期时间")
 				}
 			case "url":
-				if !IsUrl(sv) {
+				if !verify.IsUrl(sv) {
 					Error(errCode,rk + "参数必须是url")
 				}
 			case "ipv4":
-				if !IsIPv4(sv) {
+				if !verify.IsIPv4(sv) {
 					Error(errCode,rk + "参数必须是IP地址")
 				}
 			case "ipv6":
-				if !IsIPv6(sv) {
+				if !verify.IsIPv6(sv) {
 					Error(errCode,rk + "参数必须是IP地址")
 				}
 			default:

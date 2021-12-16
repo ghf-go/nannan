@@ -9,7 +9,4 @@ func SetProfileAction(engine *web.EngineCtx) error  {
 func GetProfileAction(engine *web.EngineCtx)error  {
 	return nil
 }
-//设置基本信息
-func SetBaseInfoAction(engine *web.EngineCtx)error  {
-	return nil
-}
+

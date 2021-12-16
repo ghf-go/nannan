@@ -11,6 +11,9 @@ func RegRouter()  {
 		group.POST("profile",account.GetProfileAction)
 		group.POST("profile_set",account.SetProfileAction)
 		group.POST("baseinfo_set",account.SetBaseInfoAction)
+		group.POST("bind_mobile",account.BindMobileAction)
+		group.POST("bind_email",account.BindEmailAction)
+		group.POST("bind_wx",account.BindWxAction)
 	})
 	web.RegisterRouterGroup("/api/relation", func(group *web.RouterGroup) {
 

@@ -3,27 +3,24 @@ package smscode
 import (
 	"context"
 	"fmt"
-	"github.com/ghf-go/nannan/drivers"
 	"github.com/ghf-go/nannan/web"
+	"github.com/ghf-go/nannan/web/webbase/logic"
 	"time"
 )
 
 var (
-	_redisConf = "default"
 	_rkformat = "sms:%d:%s"
 	_smsTypeFormatMap = map[int]string{}
 )
 
-func RegisterRedisName(redisConfName string)  {
-	_redisConf = redisConfName
-}
+
 func RegisterSmsTypeFormat(data map[int]string)  {
 	_smsTypeFormatMap = data
 }
 func SendCode(mobile string,sendType int)  {
 	rk := getRedisKey(mobile,sendType)
 	ctx := context.Background()
-	redis := drivers.GetRedisByKey(_redisConf)
+	redis := logic.GetRedis()
 	if redis.TTL(ctx,rk).Val() > 540 {
 		web.Error(20,"你发送的太快了")
 	}
@@ -38,8 +35,8 @@ func SendCode(mobile string,sendType int)  {
 //验证短信验证码
 func VerifyCode(mobile,code string,sendType int) bool  {
 	rk := getRedisKey(mobile,sendType)
-	if drivers.GetRedisByKey(_redisConf).Get(context.Background(),rk).String() == code{
-		drivers.GetRedisByKey(_redisConf).Del(context.Background(),rk)
+	if logic.GetRedis().Get(context.Background(),rk).String() == code{
+		logic.GetRedis().Del(context.Background(),rk)
 		return true
 	}
 	return false
