@@ -8,6 +8,11 @@ import (
 	"time"
 )
 
+const (
+	SMS_TYPE_LOGIN = 1
+	SMS_TYPE_BIND  = 2
+)
+
 var (
 	_rkformat         = "sms:%d:%s"
 	_smsTypeFormatMap = map[int]string{}
