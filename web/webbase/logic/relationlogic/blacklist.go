@@ -41,3 +41,13 @@ func InBlackList(uid, targetid int64) bool {
 	}
 	return r
 }
+
+//更新黑名单
+func ReLoadBackListCacheByUid(uid int64) {
+
+}
+
+//更新全部的黑名单
+func ReloadBackListCacheAll() {
+
+}

@@ -38,7 +38,7 @@ func GetFollowIDList(uid int64) []int64 {
 	ret := []int64{}
 	l, e := logic.GetRedis().HGetAll(context.Background(), getRedisFollowKey(uid)).Result()
 	if e == nil {
-		for k, _ := range l {
+		for k := range l {
 			targetId, e := strconv.ParseInt(k, 10, 64)
 			if e == nil {
 				ret = append(ret, targetId)
@@ -62,4 +62,14 @@ func IsFollow(uid, targetId int64) bool {
 	//
 	//redis.HSet(context.Background(), rk, string(targetId), isFolow)
 	//return isFolow
+}
+
+//更新黑名单
+func ReLoadFollowCacheByUid(uid int64) {
+
+}
+
+//更新全部的黑名单
+func ReloadFollowCacheAll() {
+
 }

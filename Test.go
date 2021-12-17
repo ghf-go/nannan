@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/ghf-go/nannan/app"
 	"github.com/ghf-go/nannan/web"
+	"github.com/ghf-go/nannan/web/webbase"
 	"os"
 )
 
@@ -16,11 +17,6 @@ func main() {
 			})
 		})
 	})
-	web.RegisterMiddleWare(func(e *web.EngineCtx, f func(*web.EngineCtx)) {
-		e.Header().Add("aa", "bb")
-		//glog.Debug("测试1")
-		f(e)
-		//glog.Debug("ceshi 2")
-	})
+	webbase.RegisterRouter()
 	app.Run()
 }
