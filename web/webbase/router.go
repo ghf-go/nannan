@@ -9,19 +9,20 @@ import (
 
 func RegisterRouter() {
 	web.RegisterRouterGroup("/api/account", func(group *web.RouterGroup) {
-		group.POST("profile", account.GetProfileAction)
-		group.POST("profile_set", account.SetProfileAction)
-		group.POST("bind_mobile", account.BindMobileAction)
-		group.POST("bind_email", account.BindEmailAction)
-		group.POST("bind_wx", account.BindWxAction)
-		group.POST("login", account.LoginAction)
-		group.POST("login_wx", account.LoginByH5WxAction)
+		group.POST("profile", account.GetProfileAction)     //获取用户资料
+		group.POST("profile_set", account.SetProfileAction) //设置用户资料
+		group.POST("bind_mobile", account.BindMobileAction) //绑定手机号
+		group.POST("bind_email", account.BindEmailAction)   //绑定邮箱
+		group.POST("bind_wx", account.BindWxAction)         //绑定微信
+		group.POST("login", account.LoginAction)            //登录
+		group.POST("login_wx", account.LoginByH5WxAction)   //微信登录
+		group.POST("set_pass", account.SetPassAction)       //设置密码
 	})
 	web.RegisterRouterGroup("/api/relation", func(group *web.RouterGroup) {
-		group.POST("follow", relation.FollowAction)
-		group.POST("backlist", relation.BackListAction)
-		group.POST("apply_friend", relation.ApplyFriendAction)
-		group.POST("audit_friend", relation.AuditFriendAction)
+		group.POST("follow", relation.FollowAction)            //关注，取消关注
+		group.POST("backlist", relation.BackListAction)        //添加，取消黑名单
+		group.POST("apply_friend", relation.ApplyFriendAction) //申请添加好友
+		group.POST("audit_friend", relation.AuditFriendAction) //确认或者删除好友
 	})
 	web.RegisterRouterGroup("/api/msg", func(group *web.RouterGroup) {
 
