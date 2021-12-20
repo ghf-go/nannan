@@ -16,6 +16,7 @@ func AddBlackList(uid, targetid int64) bool {
 		"target_user_id": targetid,
 	}) > 0
 	if isOk {
+		logic.GetRedis().HIncrBy(context.Background(), getRedisFollowKey(uid), redisBaclListTotal, 1)
 		logic.GetRedis().HSet(context.Background(), getRedisBlackKey(uid), string(targetid), isOk)
 	}
 	return isOk
@@ -28,6 +29,7 @@ func DelBlackList(uid, targetid int64) bool {
 	}
 	isOk := logic.CreateQuery(tb_relation_blacklist).Where("user_id=? AND target_user_id=?", uid, targetid).Delete() > 0
 	if isOk {
+		logic.GetRedis().HIncrBy(context.Background(), getRedisFollowKey(uid), redisBaclListTotal, -1)
 		logic.GetRedis().HDel(context.Background(), getRedisBlackKey(uid), string(targetid))
 	}
 	return isOk

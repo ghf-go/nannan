@@ -10,9 +10,12 @@ const (
 	tb_relation_friends      = "tb_relation_friends"
 	tb_relation_blacklist    = "tb_relation_blacklist"
 
-	redisKeyFollow    = "r:fo:%d"
-	redisKeyBlackList = "r:b:%s"
-	redisKeyFriend    = "r:f:%s"
+	redisKeyFollow      = "r:fo:%d"
+	redisKeyBlackList   = "r:b:%s"
+	redisKeyFriend      = "r:f:%s"
+	redisFollowTotal    = "total"
+	redisFollowFanTotal = "fans"
+	redisBaclListTotal  = "total"
 )
 
 func getRedisFollowKey(uid int64) string {

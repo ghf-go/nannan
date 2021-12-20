@@ -59,6 +59,7 @@ func SetProfile(uid int64, data map[string]interface{}) {
 		rd.HSet(context.Background(), rk, rdata...)
 	}
 }
+
 func getRedisKeyProfile(uid int64) string {
 	return fmt.Sprintf(redisKeyProfile, uid)
 }

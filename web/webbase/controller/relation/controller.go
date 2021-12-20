@@ -11,13 +11,13 @@ func FollowAction(ctx *web.EngineCtx) error {
 	ctx.Verify(req)
 	if req.IsDel {
 		if relationlogic.UnFollow(ctx.ForceUID(), req.TargetUid) {
-			return ctx.JsonSuccess("OK")
+			return ctx.JsonSuccess(relationlogic.GetFanCount(req.TargetUid))
 		} else {
 			return ctx.JsonFail(123, "取消关注失败")
 		}
 	} else {
 		if relationlogic.Follow(ctx.ForceUID(), req.TargetUid) {
-			return ctx.JsonSuccess("OK")
+			return ctx.JsonSuccess(relationlogic.GetFanCount(req.TargetUid))
 		} else {
 			return ctx.JsonFail(123, "关注失败")
 		}
@@ -48,7 +48,7 @@ func ApplyFriendAction(ctx *web.EngineCtx) error {
 	req := &reqFriendApply{}
 	ctx.Verify(req)
 	if relationlogic.ApplyFriend(ctx.ForceUID(), req.TargetUid, req.Msg) {
-		return ctx.JsonSuccess("OK")
+		return ctx.JsonSuccess(relationlogic.StatFriend(ctx.ForceUID(), req.TargetUid))
 	}
 	return ctx.JsonFail(123, "申请失败")
 }
@@ -58,7 +58,7 @@ func AuditFriendAction(ctx *web.EngineCtx) error {
 	req := &reqFriendAudit{}
 	ctx.Verify(req)
 	if relationlogic.AuditFriend(ctx.ForceUID(), req.TargetUid, req.IsDel) {
-		return ctx.JsonSuccess("OK")
+		return ctx.JsonSuccess(relationlogic.StatFriend(ctx.ForceUID(), req.TargetUid))
 	}
 	return ctx.JsonFail(123, "处理失败")
 }

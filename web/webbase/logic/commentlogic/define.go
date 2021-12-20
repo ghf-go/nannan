@@ -11,6 +11,8 @@ const (
 	_redisPraiseTotalKey = "c:p:t:%d:%d"
 
 	_redisScoreKey    = "c:s:%d"
+	STATUS_WAIT_AUDIT = 0
+	STATUS_AUDIT      = 100
 	PRAISE_TYPE_FEED  = 1
 	PRAISE_TYPE_REPLY = 2
 )

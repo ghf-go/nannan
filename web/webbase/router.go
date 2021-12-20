@@ -3,6 +3,7 @@ package webbase
 import (
 	"github.com/ghf-go/nannan/web"
 	"github.com/ghf-go/nannan/web/webbase/controller/account"
+	"github.com/ghf-go/nannan/web/webbase/controller/comment"
 	"github.com/ghf-go/nannan/web/webbase/controller/common"
 	"github.com/ghf-go/nannan/web/webbase/controller/relation"
 )
@@ -28,7 +29,11 @@ func RegisterRouter() {
 
 	})
 	web.RegisterRouterGroup("/api/comment", func(group *web.RouterGroup) {
-
+		group.POST("/create_comment", comment.NewCommentAction) //发布评论
+		group.POST("/list_comment", comment.CommentListAction)  //评论列表
+		group.POST("/praise", comment.PraiseAction)             //赞，取消点赞
+		group.POST("/create_feed", comment.NewFeedAction)       //发布动态
+		group.POST("/list_feed", comment.FeedList)              //动态列表
 	})
 	web.RegisterRouterGroup("/api/common", func(group *web.RouterGroup) {
 		group.POST("send_sms_code", common.SendSmsCodeAction)

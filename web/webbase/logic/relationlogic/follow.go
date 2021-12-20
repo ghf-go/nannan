@@ -16,6 +16,8 @@ func Follow(uid, targetId int64) bool {
 		"target_id": targetId,
 	}) > 0
 	if isOk {
+		logic.GetRedis().HIncrBy(context.Background(), getRedisFollowKey(uid), redisFollowTotal, 1)
+		logic.GetRedis().HIncrBy(context.Background(), getRedisFollowKey(targetId), redisFollowFanTotal, 1)
 		logic.GetRedis().HSet(context.Background(), getRedisFollowKey(uid), string(targetId), true)
 	}
 	return isOk
@@ -29,8 +31,24 @@ func UnFollow(uid, targetId int64) bool {
 	isOk := logic.CreateQuery(tb_relation_follow).Where("user_id=? AND target_id=?", uid, targetId).Delete() > 0
 	if isOk {
 		logic.GetRedis().HDel(context.Background(), getRedisFollowKey(uid), string(targetId))
+		logic.GetRedis().HIncrBy(context.Background(), getRedisFollowKey(uid), redisFollowTotal, -1)
+		logic.GetRedis().HIncrBy(context.Background(), getRedisFollowKey(targetId), redisFollowFanTotal, -1)
 	}
 	return isOk
+}
+func GetFanCount(uid int64) int64 {
+	r, e := logic.GetRedis().HGet(context.Background(), getRedisFollowKey(uid), redisFollowFanTotal).Int64()
+	if e != nil {
+		return 0
+	}
+	return r
+}
+func GetFollowCount(uid int64) int64 {
+	r, e := logic.GetRedis().HGet(context.Background(), getRedisFollowKey(uid), redisFollowTotal).Int64()
+	if e != nil {
+		return 0
+	}
+	return r
 }
 
 //获取关注列表
@@ -39,6 +57,9 @@ func GetFollowIDList(uid int64) []int64 {
 	l, e := logic.GetRedis().HGetAll(context.Background(), getRedisFollowKey(uid)).Result()
 	if e == nil {
 		for k := range l {
+			if k == redisFollowTotal || k == redisFollowFanTotal {
+				continue
+			}
 			targetId, e := strconv.ParseInt(k, 10, 64)
 			if e == nil {
 				ret = append(ret, targetId)
