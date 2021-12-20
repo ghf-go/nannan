@@ -37,7 +37,11 @@ func RegisterRouter() {
 		group.POST("/upload", comment.UploadFileAction)
 	})
 	web.RegisterRouterGroup("/api/common", func(group *web.RouterGroup) {
-		group.POST("send_sms_code", common.SendSmsCodeAction)
+		group.POST("send_sms_code", common.SendSmsCodeAction) //发送短信验证码
+
+		group.POST("/tags", common.TagListAction)     //标签列表
+		group.POST("/groups", common.GroupListAction) //分组列表
+		group.POST("/confs", common.ConfListAction)   //配置列表
 
 	})
 

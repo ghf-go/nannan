@@ -4,3 +4,7 @@ type ReqSendSmsCode struct {
 	Mobile   string `post:"mobile" verify:"required;mobile"`
 	SendType int    `post:"sendType" verify:"required"`
 }
+
+type reqBaseGroup struct {
+	GroupID int64 `post:"group_id" verify:"required"`
+}
