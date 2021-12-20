@@ -34,9 +34,11 @@ func RegisterRouter() {
 		group.POST("/praise", comment.PraiseAction)             //赞，取消点赞
 		group.POST("/create_feed", comment.NewFeedAction)       //发布动态
 		group.POST("/list_feed", comment.FeedList)              //动态列表
+		group.POST("/upload", comment.UploadFileAction)
 	})
 	web.RegisterRouterGroup("/api/common", func(group *web.RouterGroup) {
 		group.POST("send_sms_code", common.SendSmsCodeAction)
+
 	})
 
 }

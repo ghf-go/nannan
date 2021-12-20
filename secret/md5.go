@@ -3,7 +3,9 @@ package secret
 import (
 	"crypto/md5"
 	"encoding/hex"
+	"io"
 	"io/ioutil"
+	"mime/multipart"
 	"os"
 )
 
@@ -38,5 +40,16 @@ func MD5OsFile(f *os.File) string {
 	}
 	h := md5.New()
 	h.Write(data)
+	f.Seek(io.SeekStart, 0)
+	return hex.EncodeToString(h.Sum(nil))
+}
+func MD5HttpFile(f multipart.File) string {
+	data, e := ioutil.ReadAll(f)
+	if e != nil {
+		return ""
+	}
+	h := md5.New()
+	h.Write(data)
+	f.Seek(io.SeekStart, 0)
 	return hex.EncodeToString(h.Sum(nil))
 }
