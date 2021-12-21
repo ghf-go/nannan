@@ -6,12 +6,7 @@ import (
 	"github.com/ghf-go/nannan/glog"
 	"github.com/go-redis/redis/v8"
 	"strings"
-)
-
-var (
-	_redisMap         = map[string]*redis.Client{}
-	_redisClusterMap  = map[string]*redis.ClusterClient{}
-	_redisSentinelMap = map[string]*redis.Client{}
+	"time"
 )
 
 func GetRedisByKey(confName string) *redis.Client {
@@ -31,11 +26,18 @@ func GetRedis(conf gconf.GConf) *redis.Client {
 		glog.Error("获取配置错误 %s", conf.GetBase())
 		panic("redis配置类型错误")
 	}
-	if r, ok := _redisMap[conf.GetBase()]; ok {
-		return r
-	}
+
 	opt := &redis.Options{
-		Addr: fmt.Sprintf("%s:%d", conf.GetHost(), conf.GetPort()),
+		Addr:               fmt.Sprintf("%s:%d", conf.GetHost(), conf.GetPort()),
+		DialTimeout:        time.Second * 30,
+		ReadTimeout:        time.Second * 30,
+		IdleTimeout:        time.Second * 30,
+		PoolTimeout:        time.Second * 30,
+		WriteTimeout:       time.Second * 30,
+		IdleCheckFrequency: time.Second * 3,
+		PoolSize:           5,
+		MinIdleConns:       1,
+		MaxConnAge:         time.Second * 45,
 	}
 	if conf.GetArgInt("db") > 0 {
 		opt.DB = conf.GetArgInt("db")
@@ -51,7 +53,6 @@ func GetRedis(conf gconf.GConf) *redis.Client {
 		opt.Password = conf.GetPassWord()
 	}
 	r := redis.NewClient(opt)
-	_redisMap[conf.GetBase()] = r
 	return r
 }
 
@@ -61,16 +62,23 @@ func GetRedisCluster(conf gconf.GConf) *redis.ClusterClient {
 		glog.Error("获取配置错误 %s", conf.GetBase())
 		panic("redis配置类型错误")
 	}
-	if r, ok := _redisClusterMap[conf.GetBase()]; ok {
-		return r
-	}
+
 	server := conf.GetArgs("servers")
 	if server == "" {
 		glog.Error("获取配置错误,没有配置服务器 %s", conf.GetBase())
 		panic("redis配置类型错误")
 	}
 	opt := &redis.ClusterOptions{
-		Addrs: strings.Split(server, ","),
+		Addrs:              strings.Split(server, ","),
+		DialTimeout:        time.Second * 30,
+		ReadTimeout:        time.Second * 30,
+		IdleTimeout:        time.Second * 30,
+		PoolTimeout:        time.Second * 30,
+		WriteTimeout:       time.Second * 30,
+		IdleCheckFrequency: time.Second * 3,
+		PoolSize:           5,
+		MinIdleConns:       1,
+		MaxConnAge:         time.Second * 45,
 	}
 
 	if conf.GetArgInt("retries") > 0 {
@@ -83,7 +91,6 @@ func GetRedisCluster(conf gconf.GConf) *redis.ClusterClient {
 		opt.Password = conf.GetPassWord()
 	}
 	r := redis.NewClusterClient(opt)
-	_redisClusterMap[conf.GetBase()] = r
 	return r
 }
 
@@ -92,9 +99,6 @@ func GetRedisSentinel(conf gconf.GConf) *redis.Client {
 	if conf.GetScheme() != "redis_sentinel" {
 		glog.Error("获取配置错误 %s", conf.GetBase())
 		panic("redis配置类型错误")
-	}
-	if r, ok := _redisMap[conf.GetBase()]; ok {
-		return r
 	}
 	server := conf.GetArgs("servers")
 	if server == "" {
@@ -119,6 +123,5 @@ func GetRedisSentinel(conf gconf.GConf) *redis.Client {
 		opt.Password = conf.GetPassWord()
 	}
 	r := redis.NewFailoverClient(opt)
-	_redisSentinelMap[conf.GetBase()] = r
 	return r
 }
