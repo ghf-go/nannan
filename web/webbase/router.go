@@ -32,19 +32,18 @@ func RegisterRouter() {
 		group.POST("/create_comment", comment.NewCommentAction) //发布评论
 		group.POST("/list_comment", comment.CommentListAction)  //评论列表
 		group.POST("/praise", comment.PraiseAction)             //赞，取消点赞
-		group.POST("/create_feed", comment.NewFeedAction)       //发布动态
+		group.POST("/feed/create", comment.NewFeedAction)       //发布动态
 		group.POST("/list_feed", comment.FeedList)              //动态列表
 		group.POST("/upload", comment.UploadFileAction)
 	})
 	web.RegisterRouterGroup("/api/common", func(group *web.RouterGroup) {
 		group.POST("send_sms_code", common.SendSmsCodeAction) //发送短信验证码
-
-		group.POST("/tags", common.TagListAction)       //标签列表
-		group.POST("/tag/new", common.NewTagAction)     //标签添加
-		group.POST("/groups", common.GroupListAction)   //分组列表
-		group.POST("/group/new", common.NewGroupAction) //添加分组
-		group.POST("/confs", common.ConfListAction)     //配置列表
-		group.POST("/conf/new", common.NewConfAction)   //配置添加
+		group.POST("/tags", common.TagListAction)             //标签列表
+		group.POST("/tag/new", common.NewTagAction)           //标签添加
+		group.POST("/groups", common.GroupListAction)         //分组列表
+		group.POST("/group/new", common.NewGroupAction)       //添加分组
+		group.POST("/confs", common.ConfListAction)           //配置列表
+		group.POST("/conf/new", common.NewConfAction)         //配置添加
 
 	})
 

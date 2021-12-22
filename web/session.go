@@ -19,7 +19,7 @@ func (ses session) UID() int64 {
 	if r == nil {
 		return 0
 	}
-	return r.(int64)
+	return int64(r.(float64))
 }
 func (ses session) SetUID(uid int64) {
 	ses.SetSession("uid", uid)
