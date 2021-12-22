@@ -102,3 +102,13 @@ func JWTMiddleWare(engine *EngineCtx, handle func(*EngineCtx)) {
 		glog.AppDebug("JWT json encode 错误 %s", e.Error())
 	}
 }
+
+//微信服务器校验
+func WxEchoStrMiddkeWare(engine *EngineCtx, handle func(*EngineCtx)) {
+	ecstr := engine.get("echostr")
+	if ecstr != "" {
+		engine.Write([]byte(ecstr))
+		return
+	}
+	handle(engine)
+}
