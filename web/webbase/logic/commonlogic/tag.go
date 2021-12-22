@@ -27,6 +27,6 @@ func NewTag(groupid int64, tagname string) {
 		"tag_name": tagname,
 	})
 	if id > 0 {
-		logic.GetRedis().HSet(context.Background(), redisTagKey(groupid), string(id), tagname)
+		logic.GetRedis().HSet(context.Background(), redisTagKey(groupid), strconv.FormatInt(id, 10), tagname)
 	}
 }

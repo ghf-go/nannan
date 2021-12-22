@@ -10,3 +10,10 @@ func ConfListAction(ctx *web.EngineCtx) error {
 	ctx.Verify(req)
 	return ctx.JsonSuccess(commonlogic.GetConfByGroupID(req.GroupID))
 }
+
+func NewConfAction(ctx *web.EngineCtx) error {
+	req := &reqNewConf{}
+	ctx.Verify(req)
+	commonlogic.NewConf(req.GroupID, req.ValType, req.Key, req.Desc, req.Val)
+	return ctx.JsonSuccess("OK")
+}
