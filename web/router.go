@@ -1,7 +1,6 @@
 package web
 
 import (
-	"github.com/ghf-go/nannan/glog"
 	"net/http"
 	"strings"
 	"time"
@@ -68,7 +67,6 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 				return
 			}
 		}
-		glog.AppDebug("没有找到分组 %s -> %v", gdir, r.data)
 		error404(engineCtx)
 	})
 

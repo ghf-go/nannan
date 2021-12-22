@@ -112,3 +112,6 @@ func WxEchoStrMiddkeWare(engine *EngineCtx, handle func(*EngineCtx)) {
 	}
 	handle(engine)
 }
+func RedisSssionMiddkeWare(engine *EngineCtx, handle func(*EngineCtx)) {
+
+}

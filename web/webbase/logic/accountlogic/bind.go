@@ -54,7 +54,7 @@ func GetUidByName(name string) int64 {
 }
 
 func GetUidByMobile(mobile string) int64 {
-	var um *modelUserMobile
+	um := &modelUserMobile{}
 	if logic.CreateQuery(tb_user_mobile).Where("mobile=?", mobile).Frist(um) == nil {
 		return um.UserID
 	}

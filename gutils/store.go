@@ -3,6 +3,7 @@ package gutils
 import (
 	"github.com/ghf-go/nannan/drivers/netstore"
 	"github.com/ghf-go/nannan/gconf"
+	"github.com/ghf-go/nannan/gerr"
 )
 
 var (
@@ -29,6 +30,6 @@ func GetNetStore(name string) netstore.NetStore {
 		_storeMap[name] = f
 		return f
 	}
-	Error(123, "配置错误")
+	gerr.Error(123, "配置错误")
 	return nil
 }

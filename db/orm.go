@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"github.com/ghf-go/nannan/glog"
 	"reflect"
 	"strings"
 	"time"
@@ -20,18 +21,20 @@ const (
 func saveObj(rows *sql.Rows, obj interface{}) error {
 	t := reflect.TypeOf(obj)
 	if t.Kind() != reflect.Ptr || t.Elem().Kind() != reflect.Struct {
+		glog.Error("错误 保存对象必须是指针对象 %s", t.Kind())
 		return errors.New("保存对象必须是指针对象")
 	}
 	t = t.Elem()
 	val := reflect.ValueOf(obj).Elem()
 	columns, e := rows.Columns()
 	if e != nil {
+		glog.Error("错误 %s", e.Error())
 		return e
 	}
 	fm := _getColumMapByType(columns, t)
 	ln := len(columns)
 	defer rows.Close()
-	if !rows.Next() {
+	if rows.Next() {
 		e := _saveRow(rows, ln, fm, t, val)
 		if e != nil {
 			return e
@@ -109,7 +112,8 @@ func getObjFields(obj interface{}) []string {
 func getObjFieldStr(obj interface{}) string {
 	ret := []string{}
 	t := reflect.TypeOf(obj)
-	for {
+	isBreak := true
+	for isBreak {
 		switch t.Kind() {
 		case reflect.Ptr:
 			t = t.Elem()
@@ -118,8 +122,8 @@ func getObjFieldStr(obj interface{}) string {
 		case reflect.Slice:
 			t = t.Elem()
 		case reflect.Struct:
+			isBreak = false
 			break
-
 		}
 	}
 	fnum := t.NumField()
@@ -193,7 +197,7 @@ func _saveRow(rows *sql.Rows, cl int, fm map[int]int, t reflect.Type, obj reflec
 		return e
 	}
 	for ci, i := range fm {
-		obj.Field(i).Set(reflect.ValueOf(args[ci]))
+		obj.Field(i).Set(reflect.ValueOf(args[ci]).Elem())
 	}
 	return nil
 }

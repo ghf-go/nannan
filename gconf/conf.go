@@ -2,6 +2,7 @@ package gconf
 
 import (
 	"errors"
+	"github.com/ghf-go/nannan/glog"
 	"net/url"
 	"os"
 	"strconv"
@@ -35,6 +36,7 @@ func GetConf(confName string) GConf {
 	}
 	rUrl := os.Getenv(confName)
 	if rUrl == "" {
+		glog.Debug(confName)
 		panic(ErrorNotConf)
 	}
 	u, e := url.Parse(rUrl)
@@ -48,14 +50,14 @@ func GetConf(confName string) GConf {
 	port := 0
 	p := u.Port()
 	if p != "" {
-		port, e = strconv.Atoi(p[1:])
+		port, e = strconv.Atoi(p)
 	}
 	r := GConf{
 		_base:  rUrl,
 		scheme: u.Scheme,
 		user:   u.User.Username(),
 		pass:   pass,
-		host:   u.Host,
+		host:   u.Hostname(),
 		port:   port,
 		path:   u.Path,
 		args:   u.Query(),

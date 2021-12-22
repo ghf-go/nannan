@@ -3,8 +3,8 @@ package netstore
 import (
 	"fmt"
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
+	"github.com/ghf-go/nannan/gerr"
 	"github.com/ghf-go/nannan/secret"
-	"github.com/ghf-go/nannan/web"
 	"io"
 	"math/rand"
 	"strconv"
@@ -26,11 +26,11 @@ type AliOss struct {
 func (ali AliOss) getBucket() *oss.Bucket {
 	c, e := oss.New(ali.Endpoint, ali.AccessKeyId, ali.AccessKeySecret)
 	if e != nil {
-		web.Error(123, e.Error())
+		gerr.Error(123, e.Error())
 	}
 	b, e := c.Bucket(ali.BucketName)
 	if e != nil {
-		web.Error(123, e.Error())
+		gerr.Error(123, e.Error())
 	}
 	return b
 }

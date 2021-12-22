@@ -3,9 +3,14 @@ package glog
 import "log"
 
 var (
-	_logs = []*log.Logger{log.Default()}
+	_logs = []*log.Logger{}
 )
 
+func init() {
+	l := log.Default()
+	l.SetFlags(log.LstdFlags | log.Llongfile | log.Lshortfile)
+	RegisterLogger(l)
+}
 func RegisterLogger(l *log.Logger) {
 	_logs = append(_logs, l)
 }

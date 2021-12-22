@@ -9,13 +9,24 @@ import (
 	"time"
 )
 
+var (
+	_redisConMap = map[string]*redis.Client{}
+)
+
 func GetRedisByKey(confName string) *redis.Client {
-	conf := gconf.GetConf("cache." + confName)
+	if r, ok := _redisConMap[confName]; ok {
+		return r
+	}
+	conf := gconf.GetConf("redis." + confName)
 	switch conf.GetScheme() {
 	case "redis":
-		return GetRedis(conf)
+		r := GetRedis(conf)
+		_redisConMap[confName] = r
+		return r
 	case "redis_sentinel":
-		return GetRedisSentinel(conf)
+		r := GetRedisSentinel(conf)
+		_redisConMap[confName] = r
+		return r
 	}
 	panic("redis参数错误")
 }
@@ -34,7 +45,7 @@ func GetRedis(conf gconf.GConf) *redis.Client {
 		IdleTimeout:        time.Second * 30,
 		PoolTimeout:        time.Second * 30,
 		WriteTimeout:       time.Second * 30,
-		IdleCheckFrequency: time.Second * 3,
+		IdleCheckFrequency: time.Second * 30,
 		PoolSize:           5,
 		MinIdleConns:       1,
 		MaxConnAge:         time.Second * 45,

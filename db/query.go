@@ -3,6 +3,7 @@ package db
 import (
 	"database/sql"
 	"fmt"
+	"github.com/ghf-go/nannan/glog"
 	"strings"
 )
 
@@ -92,6 +93,7 @@ func (q *Query) Order(name, order string) *Query {
 func (q *Query) Frist(obj interface{}) error {
 	r, e := q._fetch(getObjFieldStr(obj))
 	if e != nil {
+		glog.Error("sql 错误 %s", e.Error())
 		return e
 	}
 	return saveObj(r, obj)
@@ -179,6 +181,7 @@ func (q *Query) _fetch(fields string) (*sql.Rows, error) {
 			sql += fmt.Sprintf(" OFFSET %d", q.start)
 		}
 	}
+
 	return q.table.Query(sql, args...)
 }
 

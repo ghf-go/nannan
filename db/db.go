@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/ghf-go/nannan/drivers"
+	"github.com/ghf-go/nannan/glog"
 	_ "github.com/go-sql-driver/mysql"
 	"strings"
 )
@@ -25,6 +26,7 @@ func (dbc *DBCon) Close() {
 	dbc = nil
 }
 func (dbc *DBCon) Query(sql string, args ...interface{}) (*sql.Rows, error) {
+	glog.Debug("sql -> %s %v", sql, args)
 	if dbc.tx == nil {
 		return dbc.db.Query(sql, args...)
 	}
@@ -32,6 +34,7 @@ func (dbc *DBCon) Query(sql string, args ...interface{}) (*sql.Rows, error) {
 }
 
 func (dbc *DBCon) Exec(sql string, args ...interface{}) (sql.Result, error) {
+	glog.Debug("sql -> %s", sql)
 	if dbc.tx == nil {
 		return dbc.db.Exec(sql, args...)
 	}

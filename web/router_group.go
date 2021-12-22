@@ -1,6 +1,8 @@
 package web
 
 import (
+	"github.com/ghf-go/nannan/gerr"
+	"reflect"
 	"strings"
 )
 
@@ -65,9 +67,11 @@ func (r *RouterGroup) ANY(path string, funcName func(ctx *EngineCtx) error) {
 func (r *RouterGroup) run(engineCtx *EngineCtx) {
 	defer func() {
 		if e := recover(); e != nil {
-			if is_error(e) {
-				e2 := e.(_error)
+			if gerr.IsError(e) {
+				e2 := e.(gerr.BaseErr)
 				engineCtx.JsonFail(e2.Code, e2.Msg)
+			} else if reflect.TypeOf(e).Kind() == reflect.String {
+				engineCtx.JsonFail(500, e.(string))
 			} else {
 				engineCtx.JsonFail(500, e.(error).Error())
 			}
