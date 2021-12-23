@@ -31,7 +31,7 @@ func DelBlackList(uid, targetid int64) bool {
 	isOk := logic.CreateQuery(tb_relation_blacklist).Where("user_id=? AND target_user_id=?", uid, targetid).Delete() > 0
 	if isOk {
 		logic.GetRedis().HIncrBy(context.Background(), getRedisFollowKey(uid), redisBaclListTotal, -1)
-		logic.GetRedis().HDel(context.Background(), getRedisBlackKey(uid), strconv.FormatInt(targetid, 10)
+		logic.GetRedis().HDel(context.Background(), getRedisBlackKey(uid), strconv.FormatInt(targetid, 10))
 	}
 	return isOk
 }
