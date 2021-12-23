@@ -83,5 +83,5 @@ func (es *EsClient) FindObj(tbName, id string, obj interface{}) error {
 
 //批量查询
 func (es *EsClient) MGet(tbName string, ids ...string) (*EsResponse, error) {
-	return es.do(http.MethodGet, es.getHost()+tbName+"/_mget", map[string]interface{}{"ids": ids}, nil)
+	return es.do(http.MethodPost, es.getHost()+tbName+"/_mget", map[string]interface{}{"ids": ids}, nil)
 }
