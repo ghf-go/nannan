@@ -3,6 +3,7 @@ package web
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/ghf-go/nannan/drivers/limitrate"
 	"github.com/ghf-go/nannan/gerr"
 	"github.com/ghf-go/nannan/verify"
 	"net"
@@ -11,6 +12,7 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type EngineCtx struct {
@@ -38,6 +40,16 @@ func (engine *EngineCtx) json(code int, msg string, data interface{}) error {
 		engine.Write(b)
 	}
 	return e
+}
+func (engine *EngineCtx) LimitIP(key string, maxReq int, timeWindow time.Duration) {
+	if !limitrate.GetIpLimiter().Check(key, engine.GetIP(), maxReq, timeWindow) {
+		gerr.Error(500, "操作过快")
+	}
+}
+func (engine *EngineCtx) LimitToken(key string) {
+	if !limitrate.GetTokenLimiter().GetToken(key) {
+		gerr.Error(500, "服务器繁忙")
+	}
 }
 
 //输出错误的json
