@@ -11,8 +11,8 @@ import (
 type BaseMiddleWare func(*EngineCtx, func(*EngineCtx))
 
 var (
-	_middleWare    = []BaseMiddleWare{JWTMiddleWare}
-	_middleWareLen = 1
+	_middleWare    = []BaseMiddleWare{}
+	_middleWareLen = 0
 )
 
 func RegisterMiddleWare(middleWare BaseMiddleWare) {
