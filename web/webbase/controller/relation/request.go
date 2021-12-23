@@ -14,6 +14,6 @@ type reqFriendApply struct {
 	Msg       string `post:"msg" verify:"required"`
 }
 type reqFriendAudit struct {
-	TargetUid int64 `post:"uid" verify:"required""`
+	TargetUid int64 `post:"uid" verify:"required"`
 	IsDel     bool  `post:"is_refuse"`
 }
