@@ -1,37 +1,79 @@
-## Welcome to GitHub Pages
+# nannan
 
-You can use the [editor on GitHub](https://github.com/ghf-go/nannan/edit/main/docs/index.md) to maintain and preview the content for your website in Markdown files.
+# 使用
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## CLI
 
-### Markdown
+> 注册
+>
+> app.RegisterCli(name string, callfunc func([]string))
+>
+> 运行 main cli cliname
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+## Crontanb
 
-```markdown
-Syntax highlighted code block
+> 注册
+> app.RegisterCrontan(name, timer string, isLock bool, callfunc func())
+> 运行 main crontab  name [save|remove|check]
+>
+> save 保存计划任务
+>
+> remove 删除计划任务
+>
+> check 查看计划任务
 
-# Header 1
-## Header 2
-### Header 3
+## Service
 
-- Bulleted
-- List
+> 注册
+> RegisterService(name string, callfunc func())
+>
+> 编译程序后执行 main service servicename [install|uninstall|start|stop|restart]
+> install 安装服务
+>
+> uninstall 删除服务
+>
+> start 启动服务
+>
+> stop 关闭服务
 
-1. Numbered
-2. List
+## Web
 
-**Bold** and _Italic_ and `Code` text
+> 程序编译之后直接运行即可，默认是web应用
 
-[Link](url) and ![Image](src)
+# 配置
+
+## 全局配置
+
+### web服务
+
+> os.Setenv("app.web",":80") //监听80端口
+
+## 缓存设置
+
+### memcache 配置
+
+> os.Setenv("key","memcache://")
+
+### redis 配置
+
+> os.Setenv("key","redis://user:passwd@ip:port/?retries=3&db=1")
+
+### redis 群集配置
+
+> os.Setenv("key","redis_cluster://"))
+
+### redis 哨兵配置
+
+> os.Setenv("key","redis_sentinel://user:passwd@ip:port/?retries=3&db=1&servers=ip:port,ip:port"))
+
+# 数据库使用
+
+# 路由
+
+```go
+web.RegisterRouterGroup("/admin", func (group *RouterGroup){
+group.POST("abc", function(x EngineCtx){})
+group.GET("abc", function(x EngineCtx){})
+group.ANY("abc", function(x EngineCtx){})
+})
 ```
-
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/ghf-go/nannan/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
