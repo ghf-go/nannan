@@ -202,7 +202,7 @@ func (q *Query) Delete() int64 {
 			sql += fmt.Sprintf(" OFFSET %d", q.start)
 		}
 	}
-	return q.table.DeleteSql(sql, args)
+	return q.table.DeleteSql(sql, args...)
 
 }
 func (q *Query) _queryNum(f, funcname string) int64 {

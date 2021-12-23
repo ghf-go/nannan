@@ -34,7 +34,7 @@ func (dbc *DBCon) Query(sql string, args ...interface{}) (*sql.Rows, error) {
 }
 
 func (dbc *DBCon) Exec(sql string, args ...interface{}) (sql.Result, error) {
-	glog.Debug("sql -> %s", sql)
+	glog.Debug("sql -> %s %v", sql, args)
 	if dbc.tx == nil {
 		return dbc.db.Exec(sql, args...)
 	}

@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/ghf-go/nannan/db"
 	"github.com/ghf-go/nannan/web/webbase/logic"
+	"strconv"
 )
 
 //添加到黑名单
@@ -17,7 +18,7 @@ func AddBlackList(uid, targetid int64) bool {
 	}) > 0
 	if isOk {
 		logic.GetRedis().HIncrBy(context.Background(), getRedisFollowKey(uid), redisBaclListTotal, 1)
-		logic.GetRedis().HSet(context.Background(), getRedisBlackKey(uid), string(targetid), isOk)
+		logic.GetRedis().HSet(context.Background(), getRedisBlackKey(uid), strconv.FormatInt(targetid, 10), isOk)
 	}
 	return isOk
 }
@@ -30,14 +31,14 @@ func DelBlackList(uid, targetid int64) bool {
 	isOk := logic.CreateQuery(tb_relation_blacklist).Where("user_id=? AND target_user_id=?", uid, targetid).Delete() > 0
 	if isOk {
 		logic.GetRedis().HIncrBy(context.Background(), getRedisFollowKey(uid), redisBaclListTotal, -1)
-		logic.GetRedis().HDel(context.Background(), getRedisBlackKey(uid), string(targetid))
+		logic.GetRedis().HDel(context.Background(), getRedisBlackKey(uid), strconv.FormatInt(targetid, 10)
 	}
 	return isOk
 }
 
 //是否在黑名单中
 func InBlackList(uid, targetid int64) bool {
-	r, e := logic.GetRedis().HGet(context.Background(), getRedisBlackKey(uid), string(targetid)).Bool()
+	r, e := logic.GetRedis().HGet(context.Background(), getRedisBlackKey(uid), strconv.FormatInt(targetid, 10)).Bool()
 	if e != nil {
 		return false
 	}

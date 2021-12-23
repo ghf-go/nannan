@@ -17,8 +17,8 @@ func Praise(uid int64, targetId int64, targetType int) bool {
 		"target_type": targetType,
 	}) > 0
 	if ret {
-		logic.GetRedis().HIncrBy(context.Background(), redisPraiseTotalKey(targetType), string(targetId), 1)
-		logic.GetRedis().HSet(context.Background(), redisPraiseKey(uid, targetType), string(targetId), true)
+		logic.GetRedis().HIncrBy(context.Background(), redisPraiseTotalKey(targetType), strconv.FormatInt(targetId, 10), 1)
+		logic.GetRedis().HSet(context.Background(), redisPraiseKey(uid, targetType), strconv.FormatInt(targetId, 10), true)
 	}
 	return ret
 }
@@ -28,13 +28,13 @@ func UnPraise(uid int64, targetId int64, targetType int) bool {
 	}
 	ret := logic.CreateQuery(tb_comment_praise).Where("user_id=? AND target_id=> AND target_type=?", uid, targetId, targetType).Delete() > 0
 	if ret {
-		logic.GetRedis().HDel(context.Background(), redisPraiseKey(uid, targetType), string(targetId))
-		logic.GetRedis().HIncrBy(context.Background(), redisPraiseTotalKey(targetType), string(targetId), -1)
+		logic.GetRedis().HDel(context.Background(), redisPraiseKey(uid, targetType), strconv.FormatInt(targetId, 10))
+		logic.GetRedis().HIncrBy(context.Background(), redisPraiseTotalKey(targetType), strconv.FormatInt(targetId, 10), -1)
 	}
 	return ret
 }
 func IsPraise(uid int64, targetId int64, targetType int) bool {
-	r, e := logic.GetRedis().HGet(context.Background(), redisPraiseKey(uid, targetType), string(targetId)).Bool()
+	r, e := logic.GetRedis().HGet(context.Background(), redisPraiseKey(uid, targetType), strconv.FormatInt(targetId, 10)).Bool()
 	if e != nil {
 		return false
 	}
