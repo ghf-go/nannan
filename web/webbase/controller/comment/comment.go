@@ -3,11 +3,14 @@ package comment
 import (
 	"github.com/ghf-go/nannan/web"
 	"github.com/ghf-go/nannan/web/webbase/logic/commentlogic"
+	"time"
 )
 
 func NewCommentAction(ctx *web.EngineCtx) error {
 	req := &reqNewComment{}
 	ctx.Verify(req)
+
+	ctx.LimitIP("newComment", 1, time.Second*30)
 	return ctx.JsonSuccess(commentlogic.NewComment(ctx.ForceUID(), req.TargetID, req.ParentID, req.TargetType, req.Content))
 }
 func CommentListAction(ctx *web.EngineCtx) error {

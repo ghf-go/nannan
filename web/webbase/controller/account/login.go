@@ -4,6 +4,7 @@ import (
 	"github.com/ghf-go/nannan/web"
 	"github.com/ghf-go/nannan/web/webbase/logic/accountlogic"
 	"github.com/ghf-go/nannan/web/webbase/logic/smscode"
+	"time"
 )
 
 func LoginAction(engine *web.EngineCtx) error {
@@ -12,6 +13,7 @@ func LoginAction(engine *web.EngineCtx) error {
 	if req.Passws == "" && req.Code == "" {
 		return engine.JsonFail(401, "请填写密码或者验证码")
 	} else if req.Passws != "" {
+		engine.LimitIP("loginname", 1, time.Second*15)
 		uid := accountlogic.LoginByPass(req.Name, req.Passws)
 		if uid > 0 {
 			engine.SetUID(uid)
