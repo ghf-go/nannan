@@ -17,7 +17,7 @@ func GetIpLimiter() IpLimiter {
 	if _limitIp != nil {
 		return _limitIp
 	}
-	conf := gconf.GetConf("limiter:ip")
+	conf := gconf.GetConf("limiter.ip")
 	switch conf.GetScheme() {
 	case "redis":
 		_limitIp = &IpLimiterRedisDriver{redisConfName: conf.GetHost()}

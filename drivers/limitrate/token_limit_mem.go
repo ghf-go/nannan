@@ -8,7 +8,7 @@ import (
 )
 
 type tokenLimitRedisDriver struct {
-	sync.Locker
+	sync.Mutex
 	maxReq        int
 	timeWindow    time.Duration
 	redisConfName string

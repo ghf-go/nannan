@@ -6,7 +6,7 @@ import (
 )
 
 type tokenLimitMemDriver struct {
-	sync.Locker
+	sync.Mutex
 	maxReq     int
 	timeWindow time.Duration
 	data       map[string]int

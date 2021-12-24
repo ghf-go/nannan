@@ -16,7 +16,7 @@ func GetTokenLimiter() TokenLimiter {
 	if _tokenLimiter != nil {
 		return _tokenLimiter
 	}
-	conf := gconf.GetConf("limiter:token")
+	conf := gconf.GetConf("limiter.token")
 	switch conf.GetScheme() {
 	case "redis":
 		_tokenLimiter = &tokenLimitRedisDriver{

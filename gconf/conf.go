@@ -37,7 +37,7 @@ func GetConf(confName string) GConf {
 	}
 	rUrl := os.Getenv(confName)
 	if rUrl == "" {
-		glog.Debug(confName)
+		glog.Debug("%s配置不存在", confName)
 		panic(ErrorNotConf)
 	}
 	u, e := url.Parse(rUrl)
