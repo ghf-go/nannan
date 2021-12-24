@@ -12,7 +12,19 @@ type EsResponse struct {
 	ErrorMsg  string        `json:"error"`
 	ErrorCode int           `json:"status"`
 	Docs      []*EsResponse `json:"docs"`
-	HttpCode  int
+	Hits      struct {
+		Total struct {
+			Val      int    `json:"value"`
+			Relation string `json:"relation"`
+		} `json:"total"`
+		Hits struct {
+			DbName string      `json:"_index"`
+			Table  string      `json:"_type"`
+			ID     string      `json:"_id"`
+			Source interface{} `json:"_source"`
+		} `json:"hits"`
+	} `json:"hits"`
+	HttpCode int
 }
 
 //是否删除成功

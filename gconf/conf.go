@@ -6,6 +6,7 @@ import (
 	"net/url"
 	"os"
 	"strconv"
+	"strings"
 )
 
 type GConf struct {
@@ -51,6 +52,9 @@ func GetConf(confName string) GConf {
 	p := u.Port()
 	if p != "" {
 		port, e = strconv.Atoi(p)
+	}
+	if strings.HasPrefix(u.Path, "/") {
+		u.Path = u.Path[1:]
 	}
 	r := GConf{
 		_base:  rUrl,
