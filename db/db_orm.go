@@ -66,7 +66,6 @@ func saveObjList(rows *sql.Rows, obj interface{}) error {
 	ln := len(columns)
 	defer rows.Close()
 	ret := []reflect.Value{}
-	//glog.Debug("mubia %s %v %v %v", tarObj.String(), ln, fm, t)
 	for rows.Next() {
 		val := reflect.New(tarObj)
 		e := _saveRow(rows, ln, fm, tarObj, val)
@@ -75,13 +74,12 @@ func saveObjList(rows *sql.Rows, obj interface{}) error {
 			return e
 		}
 		if isRef {
-			ret = append(ret, val.Addr())
-		} else {
 			ret = append(ret, val)
+		} else {
+			ret = append(ret, val.Elem())
 		}
 
 	}
-	glog.Debug("3mubia %s", tarObj.Kind().String())
 	a2 := reflect.Append(reflect.ValueOf(obj).Elem(), ret...)
 	reflect.ValueOf(obj).Elem().Set(a2)
 	return nil
@@ -199,7 +197,11 @@ func _saveRow(rows *sql.Rows, cl int, fm map[int]int, t reflect.Type, obj reflec
 	}
 	e := rows.Scan(args...)
 	if e != nil {
+		glog.Error("cuowu %s", e.Error())
 		return e
+	}
+	if obj.Kind() == reflect.Ptr {
+		obj = obj.Elem()
 	}
 	for ci, i := range fm {
 		obj.Field(i).Set(reflect.ValueOf(args[ci]).Elem())

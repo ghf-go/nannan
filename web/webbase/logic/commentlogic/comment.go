@@ -25,8 +25,8 @@ func NewComment(uid, targetid, parent_id int64, targetType int, content string) 
 	}
 	return nil
 }
-func CommentList(uid, targetid, parent_id int64, targetType, start, pageSize int) []CommentModel {
-	rows := []CommentModel{}
+func CommentList(uid, targetid, parent_id int64, targetType, start, pageSize int) []*CommentModel {
+	rows := []*CommentModel{}
 	sql := "target_id=? AND parent_id=? AND target_type=?"
 	args := []interface{}{targetid, parent_id, targetType}
 	if uid > 0 {
