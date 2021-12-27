@@ -61,14 +61,17 @@ func saveObjList(rows *sql.Rows, obj interface{}) error {
 	if e != nil {
 		return e
 	}
-	fm := _getColumMapByType(columns, t)
+
+	fm := _getColumMapByType(columns, tarObj)
 	ln := len(columns)
 	defer rows.Close()
 	ret := []reflect.Value{}
+	//glog.Debug("mubia %s %v %v %v", tarObj.String(), ln, fm, t)
 	for rows.Next() {
 		val := reflect.New(tarObj)
-		e := _saveRow(rows, ln, fm, t, val)
+		e := _saveRow(rows, ln, fm, tarObj, val)
 		if e != nil {
+
 			return e
 		}
 		if isRef {
@@ -78,6 +81,7 @@ func saveObjList(rows *sql.Rows, obj interface{}) error {
 		}
 
 	}
+	glog.Debug("3mubia %s", tarObj.Kind().String())
 	a2 := reflect.Append(reflect.ValueOf(obj).Elem(), ret...)
 	reflect.ValueOf(obj).Elem().Set(a2)
 	return nil
@@ -126,6 +130,7 @@ func getObjFieldStr(obj interface{}) string {
 			break
 		}
 	}
+
 	fnum := t.NumField()
 	for i := 0; i < fnum; i++ {
 		tag := t.Field(i).Tag.Get(_cokumn_name)

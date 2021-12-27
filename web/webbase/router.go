@@ -29,11 +29,11 @@ func RegisterRouter() {
 
 	})
 	web.RegisterRouterGroup("/api/comment", func(group *web.RouterGroup) {
-		group.POST("/create_comment", comment.NewCommentAction) //发布评论
-		group.POST("/list_comment", comment.CommentListAction)  //评论列表
-		group.POST("/praise", comment.PraiseAction)             //赞，取消点赞
-		group.POST("/feed/create", comment.NewFeedAction)       //发布动态
-		group.POST("/list_feed", comment.FeedList)              //动态列表
+		group.POST("/comment/new", comment.NewCommentAction)   //发布评论
+		group.POST("/comment/list", comment.CommentListAction) //评论列表
+		group.POST("/praise", comment.PraiseAction)            //赞，取消点赞
+		group.POST("/feed/create", comment.NewFeedAction)      //发布动态
+		group.POST("/list_feed", comment.FeedList)             //动态列表
 		group.POST("/upload", comment.UploadFileAction)
 	})
 	web.RegisterRouterGroup("/api/common", func(group *web.RouterGroup) {

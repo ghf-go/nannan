@@ -2,6 +2,7 @@ package web
 
 import (
 	"github.com/ghf-go/nannan/gerr"
+	"github.com/ghf-go/nannan/glog"
 	"reflect"
 	"strings"
 )
@@ -69,10 +70,13 @@ func (r *RouterGroup) run(engineCtx *EngineCtx) {
 		if e := recover(); e != nil {
 			if gerr.IsError(e) {
 				e2 := e.(gerr.BaseErr)
+				glog.Error("系统错误 %d %s", e2.Code, e2.Msg)
 				engineCtx.JsonFail(e2.Code, e2.Msg)
 			} else if reflect.TypeOf(e).Kind() == reflect.String {
+				glog.Error("系统错误 string %s", e)
 				engineCtx.JsonFail(500, e.(string))
 			} else {
+				glog.Error("系统错误 error %s", e.(error).Error())
 				engineCtx.JsonFail(500, e.(error).Error())
 			}
 		}
