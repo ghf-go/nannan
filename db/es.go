@@ -3,10 +3,32 @@ package db
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/ghf-go/nannan/gconf"
 	"io"
 	"io/ioutil"
 	"net/http"
+	"strings"
 )
+
+var (
+	_esMap = map[string]*EsClient{}
+)
+
+func GetEsClient(conName string) *EsClient {
+	if r, ok := _esMap[conName]; ok {
+		return r
+	}
+	conf := gconf.GetConf("es." + conName)
+	hosts := strings.Split(conf.GetPath(), ",")
+	r := &EsClient{
+		hosts:     hosts,
+		dbName:    conf.GetHost(),
+		reqIndex:  0,
+		hostCount: len(hosts),
+	}
+	_esMap[conName] = r
+	return r
+}
 
 type EsClient struct {
 	hosts     []string
@@ -20,7 +42,7 @@ func (es *EsClient) getHost() string {
 		es.hostCount = len(es.hosts)
 	}
 	es.reqIndex += 1
-	return es.hosts[es.reqIndex%es.hostCount]
+	return "http://" + es.hosts[es.reqIndex%es.hostCount]
 }
 
 //添加记录
