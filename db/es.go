@@ -9,12 +9,18 @@ import (
 )
 
 type EsClient struct {
-	hosts  []string
-	dbName string
+	hosts     []string
+	dbName    string
+	reqIndex  int
+	hostCount int
 }
 
 func (es *EsClient) getHost() string {
-	return ""
+	if es.hostCount == 0 {
+		es.hostCount = len(es.hosts)
+	}
+	es.reqIndex += 1
+	return es.hosts[es.reqIndex%es.hostCount]
 }
 
 //添加记录
