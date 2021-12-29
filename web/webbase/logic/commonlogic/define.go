@@ -7,6 +7,8 @@ const (
 	tb_system_group = "tb_system_group"
 	tb_system_tags  = "tb_system_tags"
 
+	_esFeed = "feed"
+
 	_redisConfKey  = "s:c:%d"
 	_redisTagKey   = "s:t:%d"
 	_redisGroupKey = "s:g:a"

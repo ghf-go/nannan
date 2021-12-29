@@ -9,13 +9,21 @@ import (
 var (
 	_redisConf = "default"
 	_dbConf    = "default"
+	_esConf    = ""
 )
 
+func RegisterEsName(esConf string) {
+	_esConf = esConf
+}
 func RegisterDBName(dbConf string) {
 	_dbConf = dbConf
 }
 func RegisterRedisName(redisConfName string) {
 	_redisConf = redisConfName
+}
+
+func GetEsClient() *db.EsClient {
+	return db.GetEsClient(_esConf)
 }
 func GetRedis() *redis.Client {
 	return drivers.GetRedisByKey(_redisConf)

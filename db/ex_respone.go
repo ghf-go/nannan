@@ -4,13 +4,13 @@ type EsResponseBaseDoc struct {
 	Index string `json:"_index"`
 	Type  string `json:"_type"`
 	Id    string `json:"_id"`
+	Found bool   `json:"found"`
 }
 type EsResponseDocsBaseDoc struct {
 	*EsResponseBaseDoc
-	Version     int  `json:"_version"`
-	SeqNo       int  `json:"_seq_no"`
-	PrimaryTerm int  `json:"_primary_term"`
-	Found       bool `json:"found"`
+	Version     int `json:"_version"`
+	SeqNo       int `json:"_seq_no"`
+	PrimaryTerm int `json:"_primary_term"`
 }
 type EsResponseBase struct {
 	ErrorMsg  interface{} `json:"error"`
