@@ -1,44 +1,67 @@
 package db
 
-type EsResponse struct {
-	DbName    string        `json:"_index"`
-	Table     string        `json:"_type"`
-	ID        string        `json:"_id"`
-	Version   int           `json:"_version"`
-	Created   bool          `json:"created"`
-	Exists    bool          `json:"exists"`
-	Found     bool          `json:"found"`
-	Source    interface{}   `json:"_source"`
-	ErrorMsg  string        `json:"error"`
-	ErrorCode int           `json:"status"`
-	Docs      []*EsResponse `json:"docs"`
-	Hits      struct {
-		Total struct {
-			Val      int    `json:"value"`
-			Relation string `json:"relation"`
-		} `json:"total"`
-		Hits struct {
-			DbName string      `json:"_index"`
-			Table  string      `json:"_type"`
-			ID     string      `json:"_id"`
-			Source interface{} `json:"_source"`
-		} `json:"hits"`
-	} `json:"hits"`
-	HttpCode int
+type EsResponseBaseDoc struct {
+	Index string `json:"_index"`
+	Type  string `json:"_type"`
+	Id    string `json:"_id"`
+}
+type EsResponseDocsBaseDoc struct {
+	*EsResponseBaseDoc
+	Version     int  `json:"_version"`
+	SeqNo       int  `json:"_seq_no"`
+	PrimaryTerm int  `json:"_primary_term"`
+	Found       bool `json:"found"`
+}
+type EsResponseBase struct {
+	ErrorMsg  interface{} `json:"error"`
+	ErrorCode int         `json:"status"`
+}
+type EsResponseUpdate struct {
+	*EsResponseBase
+	*EsResponseBaseDoc
+	Version int    `json:"_version"`
+	Result  string `json:"result"`
+	Shards  struct {
+		Total      int `json:"total"`
+		Successful int `json:"successful"`
+		Failed     int `json:"failed"`
+	} `json:"_shards"`
+	SeqNo       int `json:"_seq_no"`
+	PrimaryTerm int `json:"_primary_term"`
 }
 
-//是否删除成功
-func (er *EsResponse) IsDeleteOK() bool {
-	return er.HttpCode == 200 && er.Found
+type T struct {
+	*EsResponseBase
+	Took     int  `json:"took"`
+	TimedOut bool `json:"timed_out"`
+	Shards   struct {
+		Total      int `json:"total"`
+		Successful int `json:"successful"`
+		Skipped    int `json:"skipped"`
+		Failed     int `json:"failed"`
+	} `json:"_shards"`
+}
+type EsResponseHitBaseHits struct {
+	Total struct {
+		Value    int    `json:"value"`
+		Relation string `json:"relation"`
+	} `json:"total"`
+	MaxScore float64 `json:"max_score"`
+}
+type EsResponseHitBaseDoc struct {
+	*EsResponseBaseDoc
+	Score float64 `json:"_score"`
 }
 
-//是否找到
-func (er *EsResponse) IsFindOK() bool {
-	return er.HttpCode == 200 && er.Found
+func (r *EsResponseUpdate) IsSuccess() bool {
+	return r.Result == "deleted" || r.Result == "updated" || r.Result == "created"
 }
-func (er *EsResponse) IsCreateOK() bool {
-	return er.HttpCode == 200 && er.Created
+func (r *EsResponseUpdate) IsDelOK() bool {
+	return r.Result == "deleted"
 }
-func (er *EsResponse) IsUpdateOK() bool {
-	return er.HttpCode == 200 && !er.Created
+func (r *EsResponseUpdate) IsUpdateOK() bool {
+	return r.Result == "updated"
+}
+func (r *EsResponseUpdate) IsCreateOK() bool {
+	return r.Result == "created"
 }

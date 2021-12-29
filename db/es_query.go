@@ -222,6 +222,6 @@ func (eq *esQeury) ShouldText(key, val string) *esQeury {
 func (eq *esQeury) Missing(key string) *esQeury {
 	return eq.mustnotkv("exists", "field", key)
 }
-func (eq *esQeury) Query() (*EsResponse, error) {
-	return eq.do(http.MethodPost, eq.getHost()+eq.tbName+"/_search", eq.buildMap(), nil)
+func (eq *esQeury) Query(obj interface{}) error {
+	return eq.do(http.MethodPost, eq.getHost()+eq.tbName+"/_search", eq.buildMap(), obj)
 }
