@@ -12,7 +12,7 @@ const (
 )
 
 //保存数据到es
-func EsSaveUserInfo(uinfo *EsUser) bool {
+func EsSaveUserInfo(uinfo *UserInfo) bool {
 	r, e := logic.GetEsClient().Update(_es_tb_user, strconv.FormatInt(uinfo.UserId, 10), uinfo)
 	if e != nil {
 		glog.Error("ES 更新 %s %s 失败 %s ", _es_tb_user, uinfo.UserId, e.Error())
@@ -22,7 +22,7 @@ func EsSaveUserInfo(uinfo *EsUser) bool {
 }
 
 //从es中查找用户信息
-func EsFindUserInfo(uid int64) *EsUser {
+func EsFindUserInfo(uid int64) *UserInfo {
 	r := &esFindUser{}
 	e := logic.GetEsClient().Find(_es_tb_user, strconv.FormatInt(uid, 10), r)
 	if e != nil {
@@ -46,8 +46,8 @@ func EsDelUserInfo(uid int64) bool {
 }
 
 //批量获取用户信息
-func EsFetchUserInfoByIds(uids ...int64) map[int64]*EsUser {
-	ret := map[int64]*EsUser{}
+func EsFetchUserInfoByIds(uids ...int64) map[int64]*UserInfo {
+	ret := map[int64]*UserInfo{}
 	rep := &esMgetUser{}
 	e := logic.GetEsClient().MGet(_es_tb_user, rep, gutils.SlicInt64String(uids)...)
 	if e != nil {
