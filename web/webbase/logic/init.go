@@ -12,6 +12,10 @@ var (
 	_esConf    = ""
 )
 
+//是否使用es存储数据
+func IsEsEnable() bool {
+	return _esConf != ""
+}
 func RegisterEsName(esConf string) {
 	_esConf = esConf
 }
