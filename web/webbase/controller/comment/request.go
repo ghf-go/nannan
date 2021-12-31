@@ -21,6 +21,9 @@ type reqPraise struct {
 }
 
 type reqFeedAdd struct {
+	FeedType int `post:"type" verify:"required"`
+}
+type reqFeedBaseAdd struct {
 	FeedTitle string  `post:"title"`
 	FeedType  int     `post:"type" verify:"required"`
 	FeedDesc  string  `post:"desc" verify:"required"`
@@ -31,7 +34,18 @@ type reqFeedAdd struct {
 	Ext       string  `post:"ext"`
 	Content   string  `post:"content" verify:"required"`
 }
-type reqFeedBaseAdd struct {
+type reqFeedYehuiAdd struct {
+	FeedTitle string  `post:"title"`
+	FeedType  int     `post:"type" verify:"required"`
+	FeedDesc  string  `post:"desc" verify:"required"`
+	FeedImgs  string  `post:"imgs"`
+	X         float64 `post:"x"`
+	Y         float64 `post:"y"`
+	City      string  `post:"city"`
+	Ext       string  `post:"ext"`
+	Content   string  `post:"content" verify:"required"`
+}
+type reqFeedVoteAdd struct {
 	FeedTitle string  `post:"title"`
 	FeedType  int     `post:"type" verify:"required"`
 	FeedDesc  string  `post:"desc" verify:"required"`

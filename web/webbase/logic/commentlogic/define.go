@@ -21,6 +21,10 @@ const (
 	STATUS_AUDIT      = 100
 	PRAISE_TYPE_FEED  = 1
 	PRAISE_TYPE_REPLY = 2
+
+	FEED_TYPE_BASE   = 1
+	FEED_TYPE_YUEHUI = 2
+	FEED_TYPE_VOTE   = 3
 )
 
 func redisPraiseKey(uid int64, targetType int) string {
