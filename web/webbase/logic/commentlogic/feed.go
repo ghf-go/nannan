@@ -1,77 +1,42 @@
 package commentlogic
 
 import (
-	"context"
-	"encoding/json"
-	"fmt"
 	"github.com/ghf-go/nannan/db"
 	"github.com/ghf-go/nannan/web/webbase/logic"
-	"github.com/go-redis/redis/v8"
-	"time"
+	"strconv"
 )
 
-func NewFeed(userid int64, FeedTitle string, FeedType int, FeedDesc, FeedImgs string, x, y float64, city, ext, content string) {
+func NewFeed(userid int64, FeedType int, FeedDesc, FeedImgs string, x, y float64, city, ext, content string) {
 	id := logic.GetTable(tb_comment_feed).InsertMap(db.Data{
-		"user_id":    userid,
-		"feed_title": FeedTitle,
-		"feed_type":  FeedType,
-		"feed_desc":  FeedDesc,
-		"feed_imgs":  FeedImgs,
-		"x":          x,
-		"y":          y,
-		"city":       city,
-		"ext":        ext,
+		"user_id":   userid,
+		"feed_type": FeedType,
+		"feed_desc": FeedDesc,
+		"feed_imgs": FeedImgs,
+		"x":         x,
+		"y":         y,
+		"city":      city,
+		"ext":       ext,
+		"content":   content,
 	})
-	if id > 0 {
-		logic.GetTable(tb_comment_feed_content).InsertMap(db.Data{
-			"id":      id,
-			"content": content,
-		})
-		loadFeedDetailToRedis(id)
+	if id > 0 && logic.IsEsEnable() {
+		updateEs(id)
 	}
 
 }
-func FeedList() {
 
+func MyPublishFeedList(uid int64, start, limit int) {
+	if logic.IsEsEnable() {
+		logic.GetEsClient().NewQuery(es_comment_feed).Size(limit).Start(start).MustMatch("user_id", uid).Query()
+	}
 }
-func FollowFeedList(uid int64) {
 
-}
-func FeedDetail(targetId int64) *FeedDetailModel {
-	d := logic.GetRedis().Get(context.Background(), redisFeedKey(targetId)).String()
-
-	detail := &FeedDetailModel{}
-	if json.Unmarshal([]byte(d), detail) != nil {
-		return nil
-	}
-	return detail
-}
-func loadFeedDetailToRedis(targetId int64) *FeedDetailModel {
-	detail := &FeedDetailModel{}
-	if logic.CreateQuery(tb_comment_feed).Where("id=?", targetId).Frist(detail) != nil {
-		return nil
-	}
-	r, e := logic.GetTable(tb_comment_feed_content).Query(fmt.Sprintf("SELECT content FROM %s WHERE id=?", tb_comment_feed_content), targetId)
-	if e != nil {
-		return nil
-	}
-	defer r.Close()
-	if r.Next() {
-		content := ""
-		if r.Scan(&content) != nil {
-			return nil
+//更新内容到es中
+func updateEs(id int64) {
+	go func() {
+		obj := &FeedDetailModel{}
+		if logic.CreateQuery(tb_comment_feed).Where("id=?", id).Frist(obj) == nil {
+			obj.build()
+			logic.GetEsClient().Update(es_comment_feed, strconv.FormatInt(id, 10), obj)
 		}
-		detail.build(content)
-	}
-	sobj, e := json.Marshal(detail)
-	if e != nil {
-		logic.GetRedis().Set(context.Background(), redisFeedKey(targetId), string(sobj), time.Second*86400)
-		logic.GetRedis().ZAdd(context.Background(), redisUserFeedKey(detail.UserId), &redis.Z{
-			Score:  float64(detail.CreateAt.UnixNano()),
-			Member: detail.ID,
-		})
-	}
-
-	return detail
-
+	}()
 }

@@ -3,12 +3,13 @@ package commentlogic
 import "fmt"
 
 const (
-	tb_comment_praise       = "tp_comment_praise"
-	tb_comment_score        = "tb_comment_score"
-	tb_comment_reply        = "tb_comment_reply"
-	tb_common_upload        = "tb_common_upload"
-	tb_comment_feed         = "tb_comment_feed"
-	tb_comment_feed_content = "tb_comment_feed_content"
+	tb_comment_praise = "tp_comment_praise"
+	tb_comment_score  = "tb_comment_score"
+	tb_comment_reply  = "tb_comment_reply"
+	tb_common_upload  = "tb_common_upload"
+	tb_comment_feed   = "tb_comment_feed"
+
+	es_comment_feed = "feed"
 
 	_redisPraiseKey      = "c:p:%d:%d"
 	_redisPraiseTotalKey = "c:p:t:%d:%d"

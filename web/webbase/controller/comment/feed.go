@@ -1,20 +1,13 @@
 package comment
 
 import (
-	"github.com/ghf-go/nannan/glog"
+	"github.com/ghf-go/nannan/gutils"
 	"github.com/ghf-go/nannan/web"
 	"github.com/ghf-go/nannan/web/webbase/logic/commentlogic"
 	"time"
 )
 
 func NewFeedAction(ctx *web.EngineCtx) error {
-	ctx.Req.FormValue("123")
-	for k, v := range ctx.Req.Form {
-		for i, vv := range v {
-			glog.Debug("提交的内容 %s -> [%d %s]", k, i, vv)
-		}
-	}
-
 	ctx.LimitIP("newFeed", 1, time.Minute*3)
 	req := &reqFeedAdd{}
 	ctx.Verify(req)
@@ -35,7 +28,15 @@ func FeedList(ctx *web.EngineCtx) error {
 func newFeedBase(ctx *web.EngineCtx) error {
 	req := &reqFeedBaseAdd{}
 	ctx.Verify(req)
-	_ = ctx.ForceUID()
+	commentlogic.NewFeed(
+		ctx.ForceUID(),
+		commentlogic.FEED_TYPE_BASE,
+		gutils.StrMaxLen(req.Content, 100),
+		req.FeedImgs,
+		req.X, req.Y,
+		req.City,
+		"{}",
+		req.Content)
 	return nil
 }
 
