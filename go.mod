@@ -7,6 +7,7 @@ require (
 	github.com/bradfitz/gomemcache v0.0.0-20190913173617-a41fca850d0b
 	github.com/go-redis/redis/v8 v8.11.4
 	github.com/go-sql-driver/mysql v1.6.0
+	github.com/go-zookeeper/zk v1.0.2
 	go.etcd.io/etcd/client/v3 v3.5.1
 )
 
