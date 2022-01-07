@@ -26,11 +26,11 @@ type AliOss struct {
 func (ali AliOss) getBucket() *oss.Bucket {
 	c, e := oss.New(ali.Endpoint, ali.AccessKeyId, ali.AccessKeySecret)
 	if e != nil {
-		gerr.Error(123, e.Error())
+		gutils.Error(123, e.Error())
 	}
 	b, e := c.Bucket(ali.BucketName)
 	if e != nil {
-		gerr.Error(123, e.Error())
+		gutils.Error(123, e.Error())
 	}
 	return b
 }

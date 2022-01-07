@@ -30,6 +30,6 @@ func GetNetStore(name string) netstore.NetStore {
 		_storeMap[name] = f
 		return f
 	}
-	gerr.Error(123, "配置错误")
+	gutils.Error(123, "配置错误")
 	return nil
 }

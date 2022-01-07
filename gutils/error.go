@@ -1,4 +1,4 @@
-package gerr
+package gutils
 
 import "reflect"
 
@@ -15,7 +15,7 @@ func Error(code int, msg string) {
 }
 func IsError(v interface{}) bool {
 	t := reflect.TypeOf(v)
-	return t.String() == "gerr._error"
+	return t.String() == "gutils._error"
 }
 func (r *BaseErr) Error() string {
 	return r.Msg

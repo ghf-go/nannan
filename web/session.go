@@ -37,7 +37,7 @@ func (ses session) SetAdminID(uid int64) {
 func (ses session) ForceUID() int64 {
 	uid := ses.UID()
 	if uid == 0 {
-		gerr.Error(123, "账号没有登录")
+		gutils.Error(123, "账号没有登录")
 	}
 	return uid
 
@@ -45,7 +45,7 @@ func (ses session) ForceUID() int64 {
 func (ses session) ForceAdminID() int64 {
 	uid := ses.AdminID()
 	if uid == 0 {
-		gerr.Error(123, "账号没有登录")
+		gutils.Error(123, "账号没有登录")
 	}
 	return uid
 

@@ -7,7 +7,7 @@ import (
 
 func LoginByMobile(mobile, code string, smstype int) int64 {
 	//if !smscode.VerifyCode(mobile, code, smstype) {
-	//	gerr.Error(401, "验证码错误")
+	//	gutils.Error(401, "验证码错误")
 	//}
 	uid := GetUidByMobile(mobile)
 	if uid > 0 {
@@ -20,10 +20,10 @@ func LoginByMobile(mobile, code string, smstype int) int64 {
 func LoginByPass(name, pass string) int64 {
 	uid := GetUidByName(name)
 	if uid == 0 {
-		gerr.Error(401, "账号或密码错误")
+		gutils.Error(401, "账号或密码错误")
 	}
 	if !CheckPasswd(uid, pass) {
-		gerr.Error(401, "账号或密码错误")
+		gutils.Error(401, "账号或密码错误")
 	}
 	return uid
 }

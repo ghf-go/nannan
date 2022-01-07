@@ -29,7 +29,7 @@ func SendCode(mobile string, sendType int) {
 	ctx := context.Background()
 	redis := logic.GetRedis()
 	if redis.TTL(ctx, rk).Val() > 540 {
-		gerr.Error(401, "你发送的太快了")
+		gutils.Error(401, "你发送的太快了")
 	}
 	if format, ok := _smsTypeFormatMap[sendType]; ok {
 		code := fmt.Sprintf("%d", time.Now().UnixNano()%100000)
@@ -39,7 +39,7 @@ func SendCode(mobile string, sendType int) {
 
 		return
 	}
-	gerr.Error(401, "参数错误")
+	gutils.Error(401, "参数错误")
 }
 
 //验证短信验证码
