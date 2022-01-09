@@ -1,8 +1,8 @@
 package accountlogic
 
 import (
-	"github.com/ghf-go/nannan/gerr"
 	"github.com/ghf-go/nannan/gnet"
+	"github.com/ghf-go/nannan/gutils"
 )
 
 func LoginByMobile(mobile, code string, smstype int) int64 {

@@ -1,7 +1,6 @@
 package web
 
 import (
-	"github.com/ghf-go/nannan/gerr"
 	"github.com/ghf-go/nannan/glog"
 	"github.com/ghf-go/nannan/gutils"
 	"reflect"

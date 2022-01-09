@@ -3,7 +3,7 @@ package netstore
 import (
 	"fmt"
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
-	"github.com/ghf-go/nannan/gerr"
+	"github.com/ghf-go/nannan/gutils"
 	"github.com/ghf-go/nannan/secret"
 	"io"
 	"math/rand"

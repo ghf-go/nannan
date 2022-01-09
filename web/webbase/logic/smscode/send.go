@@ -3,7 +3,7 @@ package smscode
 import (
 	"context"
 	"fmt"
-	"github.com/ghf-go/nannan/gerr"
+	"github.com/ghf-go/nannan/gutils"
 	"github.com/ghf-go/nannan/web/webbase/logic"
 	"time"
 )
