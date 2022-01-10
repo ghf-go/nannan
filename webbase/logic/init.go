@@ -3,6 +3,7 @@ package logic
 import (
 	"github.com/ghf-go/nannan/db"
 	"github.com/ghf-go/nannan/drivers"
+	"github.com/ghf-go/nannan/drivers/es_driver"
 	"github.com/go-redis/redis/v8"
 )
 
@@ -26,7 +27,7 @@ func RegisterRedisName(redisConfName string) {
 	_redisConf = redisConfName
 }
 
-func GetEsClient() *db.EsClient {
+func GetEsClient() *es_driver.EsClient {
 	return db.GetEsClient(_esConf)
 }
 func GetRedis() *redis.Client {

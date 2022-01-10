@@ -3,7 +3,6 @@ package gnet
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/ghf-go/nannan/glog"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -42,23 +41,23 @@ func (wx WxConf) H5GetAccessTokenByCode(code string) *WxAccessTokenH5 {
 	url := fmt.Sprintf("https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=%s&grant_type=authorization_code", wx.Appid, wx.Secret, code)
 	r, e := http.Get(url)
 	if e != nil {
-		glog.Error(errFormt, e.Error())
+		mod.Error(errFormt, e.Error())
 		return nil
 	}
 	if r.StatusCode != 200 {
-		glog.Error(errFormt, e.Error())
+		mod.Error(errFormt, e.Error())
 		return nil
 	}
 	defer r.Body.Close()
 	b, e := ioutil.ReadAll(r.Body)
 	if e != nil {
-		glog.Error(errFormt, e.Error())
+		mod.Error(errFormt, e.Error())
 		return nil
 	}
 	ret := &WxAccessTokenH5{WxConf: wx}
 	e = json.Unmarshal(b, ret)
 	if e != nil {
-		glog.Error(errFormt, e.Error())
+		mod.Error(errFormt, e.Error())
 		return nil
 	}
 	return ret
@@ -69,22 +68,22 @@ func (wt *WxAccessTokenH5) H5RefreshToken() bool {
 	url := fmt.Sprintf("https://api.weixin.qq.com/sns/oauth2/refresh_token?appid=%s&grant_type=refresh_token&refresh_token=%s", wt.Appid, wt.RefreshToken)
 	r, e := http.Get(url)
 	if e != nil {
-		glog.Error(errFormt, e.Error())
+		mod.Error(errFormt, e.Error())
 		return false
 	}
 	if r.StatusCode != 200 {
-		glog.Error(errFormt, e.Error())
+		mod.Error(errFormt, e.Error())
 		return false
 	}
 	defer r.Body.Close()
 	b, e := ioutil.ReadAll(r.Body)
 	if e != nil {
-		glog.Error(errFormt, e.Error())
+		mod.Error(errFormt, e.Error())
 		return false
 	}
 	e = json.Unmarshal(b, wt)
 	if e != nil {
-		glog.Error(errFormt, e.Error())
+		mod.Error(errFormt, e.Error())
 		return false
 	}
 	return true
@@ -95,23 +94,23 @@ func (wx WxConf) GetServerToken(code string) *WxAccessTokenH5 {
 	url := fmt.Sprintf("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s", wx.Appid, wx.Secret)
 	r, e := http.Get(url)
 	if e != nil {
-		glog.Error(errFormt, e.Error())
+		mod.Error(errFormt, e.Error())
 		return nil
 	}
 	if r.StatusCode != 200 {
-		glog.Error(errFormt, e.Error())
+		mod.Error(errFormt, e.Error())
 		return nil
 	}
 	defer r.Body.Close()
 	b, e := ioutil.ReadAll(r.Body)
 	if e != nil {
-		glog.Error(errFormt, e.Error())
+		mod.Error(errFormt, e.Error())
 		return nil
 	}
 	ret := &WxAccessTokenH5{WxConf: wx}
 	e = json.Unmarshal(b, ret)
 	if e != nil {
-		glog.Error(errFormt, e.Error())
+		mod.Error(errFormt, e.Error())
 		return nil
 	}
 	return ret
@@ -122,23 +121,23 @@ func (wt *WxAccessTokenH5) H5GetUserInfo() *WxUserInfo {
 	url := fmt.Sprintf("https://api.weixin.qq.com/sns/userinfo?access_token=%s&openid=%s", wt.AccessToken, wt.Openid)
 	r, e := http.Get(url)
 	if e != nil {
-		glog.Error(errFormt, e.Error())
+		mod.Error(errFormt, e.Error())
 		return nil
 	}
 	if r.StatusCode != 200 {
-		glog.Error(errFormt, e.Error())
+		mod.Error(errFormt, e.Error())
 		return nil
 	}
 	defer r.Body.Close()
 	b, e := ioutil.ReadAll(r.Body)
 	if e != nil {
-		glog.Error(errFormt, e.Error())
+		mod.Error(errFormt, e.Error())
 		return nil
 	}
 	u := &WxUserInfo{}
 	e = json.Unmarshal(b, u)
 	if e != nil {
-		glog.Error(errFormt, e.Error())
+		mod.Error(errFormt, e.Error())
 		return nil
 	}
 	return u

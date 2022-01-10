@@ -1,8 +1,8 @@
 package web
 
 import (
-	"github.com/ghf-go/nannan/glog"
 	"github.com/ghf-go/nannan/gutils"
+	"github.com/ghf-go/nannan/mod"
 	"reflect"
 	"strings"
 )
@@ -69,14 +69,14 @@ func (r *RouterGroup) run(engineCtx *EngineCtx) {
 	defer func() {
 		if e := recover(); e != nil {
 			if gutils.IsError(e) {
-				e2 := e.(gerr.BaseErr)
-				glog.Error("系统错误 %d %s", e2.Code, e2.Msg)
+				e2 := e.(gutils.BaseErr)
+				mod.Error("系统错误 %d %s", e2.Code, e2.Msg)
 				engineCtx.JsonFail(e2.Code, e2.Msg)
 			} else if reflect.TypeOf(e).Kind() == reflect.String {
-				glog.Error("系统错误 string %s", e)
+				mod.Error("系统错误 string %s", e)
 				engineCtx.JsonFail(500, e.(string))
 			} else {
-				glog.Error("系统错误 error %s", e.(error).Error())
+				mod.Error("系统错误 error %s", e.(error).Error())
 				engineCtx.JsonFail(500, e.(error).Error())
 			}
 		}

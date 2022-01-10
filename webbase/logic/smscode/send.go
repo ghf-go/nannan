@@ -45,7 +45,7 @@ func SendCode(mobile string, sendType int) {
 //验证短信验证码
 func VerifyCode(mobile, code string, sendType int) bool {
 	rk := getRedisKey(mobile, sendType)
-	//glog.Debug("m : %s c: (%s)  r:(%s)", mobile, code, logic.GetRedis().Get(context.Background(), rk).Val())
+	//mod.Debug("m : %s c: (%s)  r:(%s)", mobile, code, logic.GetRedis().Get(context.Background(), rk).Val())
 	if logic.GetRedis().Get(context.Background(), rk).Val() == code {
 		logic.GetRedis().Del(context.Background(), rk)
 		return true

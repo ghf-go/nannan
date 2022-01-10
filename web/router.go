@@ -62,7 +62,7 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 			if group, ok := r.data[gdir]; ok {
 				engineCtx.GroupPath = gdir
 				engineCtx.NodePath = strings.Join(arr[i+1:], "/")
-				//glog.AppDebug("程序分组 %s  -> %s",gdir ,engineCtx.NodePath)
+				//mod.Debug("程序分组 %s  -> %s",gdir ,engineCtx.NodePath)
 				group.run(engineCtx)
 				return
 			}

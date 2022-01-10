@@ -1,7 +1,6 @@
 package limitrate
 
 import (
-	"github.com/ghf-go/nannan/gconf"
 	"time"
 )
 
@@ -16,7 +15,7 @@ func GetTokenLimiter() TokenLimiter {
 	if _tokenLimiter != nil {
 		return _tokenLimiter
 	}
-	conf := gconf.GetConf("limiter.token")
+	conf := mod.GetConf("limiter.token")
 	switch conf.GetScheme() {
 	case "redis":
 		_tokenLimiter = &tokenLimitRedisDriver{

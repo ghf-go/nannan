@@ -13,7 +13,7 @@ package gutils
 //	if r, ok := _storeMap[name]; ok {
 //		return r
 //	}
-//	conf := gconf.GetConf("store." + name)
+//	conf := mod.GetConf("store." + name)
 //	switch conf.GetScheme() {
 //	case "ali":
 //		f := netstore.AliOss{

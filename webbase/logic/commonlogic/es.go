@@ -1,7 +1,7 @@
 package commonlogic
 
 import (
-	"github.com/ghf-go/nannan/glog"
+	"github.com/ghf-go/nannan/mod"
 	"github.com/ghf-go/nannan/webbase/logic"
 	"strconv"
 )
@@ -10,7 +10,7 @@ import (
 func EsSaveFeed(feed *EsFeed) bool {
 	r, e := logic.GetEsClient().Update(_esFeed, strconv.FormatInt(feed.FeedId, 10), feed)
 	if e != nil {
-		glog.Error("ES 更新 %s %s 失败 %s ", _esFeed, feed.FeedId, e.Error())
+		mod.Error("ES 更新 %s %s 失败 %s ", _esFeed, feed.FeedId, e.Error())
 		return false
 	}
 	return r.IsSuccess()
@@ -21,7 +21,7 @@ func EsFindUserInfo(feedid int64) *EsFeed {
 	r := &esFindFeed{}
 	e := logic.GetEsClient().Find(_esFeed, strconv.FormatInt(feedid, 10), r)
 	if e != nil {
-		glog.AppDebug("ES 查询 %s 失败 %s", _esFeed, e.Error())
+		mod.Debug("ES 查询 %s 失败 %s", _esFeed, e.Error())
 		return nil
 	}
 	if r.Found {
@@ -34,7 +34,7 @@ func EsFindUserInfo(feedid int64) *EsFeed {
 func EsDelUserInfo(feedid int64) bool {
 	r, e := logic.GetEsClient().Delete(_esFeed, strconv.FormatInt(feedid, 10))
 	if e != nil {
-		glog.Error("ES 删除 %s  %d 失败 %s ", _esFeed, feedid, e.Error())
+		mod.Error("ES 删除 %s  %d 失败 %s ", _esFeed, feedid, e.Error())
 		return false
 	}
 

@@ -2,7 +2,6 @@ package web
 
 import (
 	"encoding/json"
-	"github.com/ghf-go/nannan/glog"
 	"github.com/ghf-go/nannan/secret"
 	"net/http"
 	"time"
@@ -64,7 +63,7 @@ func JWTMiddleWare(engine *EngineCtx, handle func(*EngineCtx)) {
 		if e == nil {
 			token = c.Value
 		} else {
-			//glog.AppDebug("JWT 获取COOKIE 错误 %s",e.Error())
+			//mod.Debug("JWT 获取COOKIE 错误 %s",e.Error())
 		}
 	}
 	if token != "" {
@@ -81,10 +80,10 @@ func JWTMiddleWare(engine *EngineCtx, handle func(*EngineCtx)) {
 
 				}
 			} else {
-				glog.AppDebug("JWT JSON decode 错误 %s -> (%s)", e.Error(), src)
+				mod.Debug("JWT JSON decode 错误 %s -> (%s)", e.Error(), src)
 			}
 		} else {
-			glog.AppDebug("JWT Aes DECODE 错误 %s", e.Error())
+			mod.Debug("JWT Aes DECODE 错误 %s", e.Error())
 		}
 	}
 	handle(engine)
@@ -96,10 +95,10 @@ func JWTMiddleWare(engine *EngineCtx, handle func(*EngineCtx)) {
 			engine.Header().Add(tname, token)
 			engine.SetCookie(&http.Cookie{Name: tname, Value: token, Expires: time.Now().Add(tExpire), Path: "/"})
 		} else {
-			glog.AppDebug("JWT Aes encode 错误 %s", e.Error())
+			mod.Debug("JWT Aes encode 错误 %s", e.Error())
 		}
 	} else {
-		glog.AppDebug("JWT json encode 错误 %s", e.Error())
+		mod.Debug("JWT json encode 错误 %s", e.Error())
 	}
 }
 

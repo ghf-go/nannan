@@ -1,16 +1,18 @@
 package accountlogic
 
-import "github.com/ghf-go/nannan/db"
+import (
+	"github.com/ghf-go/nannan/drivers/es_driver"
+)
 
 type esFindUser struct {
-	*db.EsResponseBase
-	*db.EsResponseBaseDoc
+	*es_driver.EsResponseBase
+	*es_driver.EsResponseBaseDoc
 	Data *UserInfo `json:"_source"`
 }
 type esMgetUser struct {
-	*db.EsResponseBase
+	*es_driver.EsResponseBase
 	Docs []struct {
-		*db.EsResponseDocsBaseDoc
+		*es_driver.EsResponseDocsBaseDoc
 		Data *UserInfo `json:"_source"`
 	} `json:"docs"`
 }

@@ -1,7 +1,6 @@
 package limitrate
 
 import (
-	"github.com/ghf-go/nannan/gconf"
 	"time"
 )
 
@@ -17,7 +16,7 @@ func GetIpLimiter() IpLimiter {
 	if _limitIp != nil {
 		return _limitIp
 	}
-	conf := gconf.GetConf("limiter.ip")
+	conf := mod.GetConf("limiter.ip")
 	switch conf.GetScheme() {
 	case "redis":
 		_limitIp = &IpLimiterRedisDriver{redisConfName: conf.GetHost()}

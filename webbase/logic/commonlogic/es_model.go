@@ -1,6 +1,8 @@
 package commonlogic
 
-import "github.com/ghf-go/nannan/db"
+import (
+	"github.com/ghf-go/nannan/drivers/es_driver"
+)
 
 type EsFeed struct {
 	FeedId      int64  `json:"feed_id"`
@@ -13,14 +15,14 @@ type EsFeed struct {
 }
 
 type esFindFeed struct {
-	*db.EsResponseBase
-	*db.EsResponseBaseDoc
+	*es_driver.EsResponseBase
+	*es_driver.EsResponseBaseDoc
 	Data *EsFeed `json:"_source"`
 }
 type esMgetFeed struct {
-	*db.EsResponseBase
+	*es_driver.EsResponseBase
 	Docs []struct {
-		*db.EsResponseDocsBaseDoc
+		*es_driver.EsResponseDocsBaseDoc
 		Data *EsFeed `json:"_source"`
 	} `json:"docs"`
 }
