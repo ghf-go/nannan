@@ -2,7 +2,7 @@ package commonlogic
 
 import (
 	"context"
-	"github.com/ghf-go/nannan/db"
+	"github.com/ghf-go/nannan/mod"
 	"github.com/ghf-go/nannan/webbase/logic"
 	"strconv"
 )

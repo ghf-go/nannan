@@ -1,9 +1,9 @@
 package logic
 
 import (
-	"github.com/ghf-go/nannan/db"
-	"github.com/ghf-go/nannan/drivers"
+	"github.com/ghf-go/nannan/drivers/db_driver"
 	"github.com/ghf-go/nannan/drivers/es_driver"
+	"github.com/ghf-go/nannan/mod"
 	"github.com/go-redis/redis/v8"
 )
 
@@ -28,17 +28,17 @@ func RegisterRedisName(redisConfName string) {
 }
 
 func GetEsClient() *es_driver.EsClient {
-	return db.GetEsClient(_esConf)
+	return mod.GetEsClient(_esConf)
 }
 func GetRedis() *redis.Client {
-	return drivers.GetRedisByKey(_redisConf)
+	return mod.GetRedis(_redisConf)
 }
-func GetDB() *db.DBCon {
-	return db.GetDB(_dbConf)
+func GetDB() *db_driver.DBCon {
+	return mod.NewDBClient(_dbConf)
 }
-func GetTable(table string) *db.Table {
+func GetTable(table string) *db_driver.Table {
 	return GetDB().Table(table)
 }
-func CreateQuery(table string) *db.Query {
+func CreateQuery(table string) *db_driver.Query {
 	return GetDB().Table(table).CreateQuery()
 }
