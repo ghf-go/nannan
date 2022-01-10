@@ -3,6 +3,7 @@ package gnet
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/ghf-go/nannan/mod"
 	"io/ioutil"
 	"net/http"
 	"net/url"

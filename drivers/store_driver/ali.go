@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/ghf-go/nannan/gutils"
-	"github.com/ghf-go/nannan/secret"
 	"io"
 	"math/rand"
 	"strconv"
@@ -57,18 +56,18 @@ func (ali AliOss) UploadFile(k string, file string) error {
 }
 func (ali AliOss) a(path string) string {
 	baseStr := fmt.Sprintf("%d-%d-0-", time.Now().Unix()+ali.CdnExpire, rand.Int())
-	k := secret.MD5String(fmt.Sprintf("%s-%s%s", path, baseStr, ali.CdnSecret))
+	k := gutils.MD5String(fmt.Sprintf("%s-%s%s", path, baseStr, ali.CdnSecret))
 	return fmt.Sprintf("%s%s?auth_key=%s%s", ali.CdnDomain, path, baseStr, k)
 }
 func (ali AliOss) b(path string) string {
 	ext := time.Now().Add(time.Duration(ali.CdnExpire) * time.Second).Format("200605041502")
-	k := secret.MD5String(fmt.Sprintf("%s%s%s", ali.CdnSecret, ext, path))
+	k := gutils.MD5String(fmt.Sprintf("%s%s%s", ali.CdnSecret, ext, path))
 
 	return fmt.Sprintf("%s/%s/%s%s", ali.CdnDomain, ext, k, path)
 }
 func (ali AliOss) c(path string) string {
 	t := time.Now().Unix() + ali.CdnExpire
 	th := strconv.FormatInt(t, 16)
-	k := secret.MD5String(fmt.Sprintf("%s%s%s", ali.CdnSecret, path, th))
+	k := gutils.MD5String(fmt.Sprintf("%s%s%s", ali.CdnSecret, path, th))
 	return fmt.Sprintf("%s/%s/%s%s", ali.CdnDomain, k, th, path)
 }

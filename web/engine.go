@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/ghf-go/nannan/drivers/limitrate"
 	"github.com/ghf-go/nannan/gutils"
-	"github.com/ghf-go/nannan/verify"
 	"net"
 	"net/http"
 	"net/url"
@@ -126,35 +125,35 @@ func (engine *EngineCtx) Verify(obj interface{}) {
 					gutils.Error(errCode, rk+"参数必填")
 				}
 			case "email":
-				if !verify.IsEmail(sv) {
+				if !gutils.IsEmail(sv) {
 					gutils.Error(errCode, rk+"参数必须是邮箱地址")
 				}
 			case "mobile":
-				if !verify.IsMobile(sv) {
+				if !gutils.IsMobile(sv) {
 					gutils.Error(errCode, rk+"参数必须是手机号")
 				}
 			case "date":
-				if !verify.IsDate(sv) {
+				if !gutils.IsDate(sv) {
 					gutils.Error(errCode, rk+"参数必须是日期")
 				}
 			case "time":
-				if !verify.IsTime(sv) {
+				if !gutils.IsTime(sv) {
 					gutils.Error(errCode, rk+"参数必须是时间")
 				}
 			case "datetime":
-				if !verify.IsDateTime(sv) {
+				if !gutils.IsDateTime(sv) {
 					gutils.Error(errCode, rk+"参数必须是日期时间")
 				}
 			case "url":
-				if !verify.IsUrl(sv) {
+				if !gutils.IsUrl(sv) {
 					gutils.Error(errCode, rk+"参数必须是url")
 				}
 			case "ipv4":
-				if !verify.IsIPv4(sv) {
+				if !gutils.IsIPv4(sv) {
 					gutils.Error(errCode, rk+"参数必须是IP地址")
 				}
 			case "ipv6":
-				if !verify.IsIPv6(sv) {
+				if !gutils.IsIPv6(sv) {
 					gutils.Error(errCode, rk+"参数必须是IP地址")
 				}
 			default:

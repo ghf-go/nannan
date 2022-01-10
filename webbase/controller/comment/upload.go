@@ -2,7 +2,6 @@ package comment
 
 import (
 	"github.com/ghf-go/nannan/gutils"
-	"github.com/ghf-go/nannan/secret"
 	"github.com/ghf-go/nannan/web"
 	"github.com/ghf-go/nannan/webbase/logic/commentlogic"
 	"path/filepath"
@@ -13,7 +12,7 @@ func UploadFileAction(ctx *web.EngineCtx) error {
 	if e != nil {
 		return ctx.JsonFail(500, e.Error())
 	}
-	fk := secret.MD5HttpFile(f)
+	fk := gutils.MD5HttpFile(f)
 	path := commentlogic.GetPathByFileKey(fk)
 	if path != "" {
 		return ctx.JsonSuccess(map[string]interface{}{

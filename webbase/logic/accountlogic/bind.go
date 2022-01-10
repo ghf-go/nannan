@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/ghf-go/nannan/gnet"
-	"github.com/ghf-go/nannan/verify"
+	"github.com/ghf-go/nannan/gutils"
 	"github.com/ghf-go/nannan/webbase/logic"
 	"strconv"
 	"time"
@@ -31,19 +31,19 @@ func GetUidByName(name string) int64 {
 			return uid
 		}
 	}
-	if verify.IsMobile(name) {
+	if gutils.IsMobile(name) {
 		uid := GetUidByMobile(name)
 		if uid > 0 {
 			re.Set(context.Background(), rk, uid, redisExpireBindUid)
 			return uid
 		}
-	} else if verify.IsEmail(name) {
+	} else if gutils.IsEmail(name) {
 		uid := GetUidByEmail(name)
 		if uid > 0 {
 			re.Set(context.Background(), rk, uid, redisExpireBindUid)
 			return uid
 		}
-	} else if verify.IsWxOpenID(name) {
+	} else if gutils.IsWxOpenID(name) {
 		uid := GetUidByWxOpenID(name)
 		if uid > 0 {
 			re.Set(context.Background(), rk, uid, redisExpireBindUid)

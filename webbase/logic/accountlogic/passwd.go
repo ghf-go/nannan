@@ -3,7 +3,7 @@ package accountlogic
 import (
 	"fmt"
 	"github.com/ghf-go/nannan/db"
-	"github.com/ghf-go/nannan/secret"
+	"github.com/ghf-go/nannan/gutils"
 	"github.com/ghf-go/nannan/webbase/logic"
 	"time"
 )
@@ -35,5 +35,5 @@ func CheckPasswd(uid int64, pass string) bool {
 }
 
 func buildPass(pass, sign string) string {
-	return secret.MD5String(pass + sign)
+	return gutils.MD5String(pass + sign)
 }

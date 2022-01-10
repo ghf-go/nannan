@@ -2,7 +2,7 @@ package web
 
 import (
 	"encoding/json"
-	"github.com/ghf-go/nannan/secret"
+	"github.com/ghf-go/nannan/gutils"
 	"net/http"
 	"time"
 )
@@ -54,7 +54,7 @@ func _runMiddle(engine *EngineCtx, handle func(*EngineCtx), i int) {
 }
 func JWTMiddleWare(engine *EngineCtx, handle func(*EngineCtx)) {
 	tname := "jwt"
-	aes := secret.Aes("987yhjnbgzkdlopf")
+	aes := gutils.Aes("987yhjnbgzkdlopf")
 	tExpire := time.Second * 86400 * 365
 	token := engine.Req.Header.Get(tname)
 	engine.session = session{}
