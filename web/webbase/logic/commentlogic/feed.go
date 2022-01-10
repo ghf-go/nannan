@@ -26,7 +26,7 @@ func NewFeed(userid int64, FeedType int, FeedDesc, FeedImgs string, x, y float64
 
 func MyPublishFeedList(uid int64, start, limit int) {
 	if logic.IsEsEnable() {
-		logic.GetEsClient().NewQuery(es_comment_feed).Size(limit).Start(start).MustMatch("user_id", uid).Query()
+		logic.GetEsClient().NewQuery(es_comment_feed).Size(limit).Start(start).MustMatch("user_id", uid)
 	}
 }
 
