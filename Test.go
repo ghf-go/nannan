@@ -1,18 +1,18 @@
 package main
 
 import (
-	"github.com/ghf-go/nannan/drivers"
-	"github.com/ghf-go/nannan/drivers/log_driver"
+	"fmt"
+	"time"
 )
 
 func main() {
-	l := log_driver.NewGLog(log_driver.LOG_LEVEL_DEBUG)
-	l.Register(log_driver.NewLogKafkaDriver(drivers.NewKafkaWrite("127.0.0.1:9092", "test001"), log_driver.LOG_LEVEL_DEBUG))
-	//l.Register(log_driver.NewLogStdDriver(log_driver.LOG_LEVEL_DEBUG))
-	//l.Register(log_driver.NewLogFileDriver("/tmp", log_driver.LOG_LEVEL_DEBUG))
-	for i := 0; i < 1000; i++ {
-		l.Debug("你好 %d", i)
-	}
+	//l := log_driver.NewGLog(log_driver.LOG_LEVEL_DEBUG)
+	//l.Register(log_driver.NewLogKafkaDriver(drivers.NewKafkaWrite("127.0.0.1:9092", "test001"), log_driver.LOG_LEVEL_DEBUG))
+	////l.Register(log_driver.NewLogStdDriver(log_driver.LOG_LEVEL_DEBUG))
+	////l.Register(log_driver.NewLogFileDriver("/tmp", log_driver.LOG_LEVEL_DEBUG))
+	//for i := 0; i < 1000; i++ {
+	//	l.Debug("你好 %d", i)
+	//}
 
 	//str := []rune("你好不好")
 	//fmt.Println(len(str), string(str[1:]))
@@ -28,4 +28,13 @@ func main() {
 	//
 	//webbase.RegisterRouter()
 	//app.Run()
+	a := true
+	go func() {
+		for a {
+			fmt.Println("测试内")
+			time.Sleep(time.Second * 1)
+		}
+	}()
+	time.Sleep(time.Second * 10)
+	a = false
 }
