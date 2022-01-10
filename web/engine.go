@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/ghf-go/nannan/drivers/limitrate"
-	"github.com/ghf-go/nannan/gerr"
+	"github.com/ghf-go/nannan/gutils"
 	"github.com/ghf-go/nannan/verify"
 	"net"
 	"net/http"
@@ -43,12 +43,12 @@ func (engine *EngineCtx) json(code int, msg string, data interface{}) error {
 }
 func (engine *EngineCtx) LimitIP(key string, maxReq int, timeWindow time.Duration) {
 	if !limitrate.GetIpLimiter().Check(key, engine.GetIP(), maxReq, timeWindow) {
-		gerr.Error(500, "操作过快")
+		gutils.Error(500, "操作过快")
 	}
 }
 func (engine *EngineCtx) LimitToken(key string) {
 	if !limitrate.GetTokenLimiter().GetToken(key) {
-		gerr.Error(500, "服务器繁忙")
+		gutils.Error(500, "服务器繁忙")
 	}
 }
 
@@ -94,10 +94,10 @@ func (engine *EngineCtx) Verify(obj interface{}) {
 	errCode := 401
 	t := reflect.TypeOf(obj)
 	if t.Kind() != reflect.Ptr {
-		gerr.Error(errCode, "请求参数必须是引用类型")
+		gutils.Error(errCode, "请求参数必须是引用类型")
 	}
 	if t.Elem().Kind() != reflect.Struct {
-		gerr.Error(errCode, "请求参数必须是结构体")
+		gutils.Error(errCode, "请求参数必须是结构体")
 	}
 	t = t.Elem()
 	fl := t.NumField()
@@ -123,39 +123,39 @@ func (engine *EngineCtx) Verify(obj interface{}) {
 			switch vn {
 			case "required":
 				if sv == "" {
-					gerr.Error(errCode, rk+"参数必填")
+					gutils.Error(errCode, rk+"参数必填")
 				}
 			case "email":
 				if !verify.IsEmail(sv) {
-					gerr.Error(errCode, rk+"参数必须是邮箱地址")
+					gutils.Error(errCode, rk+"参数必须是邮箱地址")
 				}
 			case "mobile":
 				if !verify.IsMobile(sv) {
-					gerr.Error(errCode, rk+"参数必须是手机号")
+					gutils.Error(errCode, rk+"参数必须是手机号")
 				}
 			case "date":
 				if !verify.IsDate(sv) {
-					gerr.Error(errCode, rk+"参数必须是日期")
+					gutils.Error(errCode, rk+"参数必须是日期")
 				}
 			case "time":
 				if !verify.IsTime(sv) {
-					gerr.Error(errCode, rk+"参数必须是时间")
+					gutils.Error(errCode, rk+"参数必须是时间")
 				}
 			case "datetime":
 				if !verify.IsDateTime(sv) {
-					gerr.Error(errCode, rk+"参数必须是日期时间")
+					gutils.Error(errCode, rk+"参数必须是日期时间")
 				}
 			case "url":
 				if !verify.IsUrl(sv) {
-					gerr.Error(errCode, rk+"参数必须是url")
+					gutils.Error(errCode, rk+"参数必须是url")
 				}
 			case "ipv4":
 				if !verify.IsIPv4(sv) {
-					gerr.Error(errCode, rk+"参数必须是IP地址")
+					gutils.Error(errCode, rk+"参数必须是IP地址")
 				}
 			case "ipv6":
 				if !verify.IsIPv6(sv) {
-					gerr.Error(errCode, rk+"参数必须是IP地址")
+					gutils.Error(errCode, rk+"参数必须是IP地址")
 				}
 			default:
 				if strings.HasPrefix(vn, "max:") {
@@ -163,17 +163,17 @@ func (engine *EngineCtx) Verify(obj interface{}) {
 					case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 						max, _ := strconv.ParseInt(vn[4:], 10, 64)
 						if max < o.Int() {
-							gerr.Error(errCode, fmt.Sprintf("%s 必须小于等于%d", rk, max))
+							gutils.Error(errCode, fmt.Sprintf("%s 必须小于等于%d", rk, max))
 						}
 					case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
 						max, _ := strconv.ParseUint(vn[4:], 10, 64)
 						if max < o.Uint() {
-							gerr.Error(errCode, fmt.Sprintf("%s 必须小于等于%d", rk, max))
+							gutils.Error(errCode, fmt.Sprintf("%s 必须小于等于%d", rk, max))
 						}
 					case reflect.Float32, reflect.Float64:
 						max, _ := strconv.ParseFloat(vn[4:], 64)
 						if max < o.Float() {
-							gerr.Error(errCode, fmt.Sprintf("%s 必须小于等于%f", rk, max))
+							gutils.Error(errCode, fmt.Sprintf("%s 必须小于等于%f", rk, max))
 						}
 					}
 				} else if strings.HasPrefix(vn, "min:") {
@@ -181,17 +181,17 @@ func (engine *EngineCtx) Verify(obj interface{}) {
 					case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 						max, _ := strconv.ParseInt(vn[4:], 10, 64)
 						if max > o.Int() {
-							gerr.Error(errCode, fmt.Sprintf("%s 必须大于等于%d", rk, max))
+							gutils.Error(errCode, fmt.Sprintf("%s 必须大于等于%d", rk, max))
 						}
 					case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
 						max, _ := strconv.ParseUint(vn[4:], 10, 64)
 						if max > o.Uint() {
-							gerr.Error(errCode, fmt.Sprintf("%s 必须大于等于%d", rk, max))
+							gutils.Error(errCode, fmt.Sprintf("%s 必须大于等于%d", rk, max))
 						}
 					case reflect.Float32, reflect.Float64:
 						max, _ := strconv.ParseFloat(vn[4:], 64)
 						if max > o.Float() {
-							gerr.Error(errCode, fmt.Sprintf("%s 必须大于等于%f", rk, max))
+							gutils.Error(errCode, fmt.Sprintf("%s 必须大于等于%f", rk, max))
 						}
 					}
 
@@ -228,24 +228,24 @@ func (engine *EngineCtx) Verify(obj interface{}) {
 						}
 					}
 					if !isOk {
-						gerr.Error(errCode, fmt.Sprintf("%s 必须在 %s", rk, vn[3:]))
+						gutils.Error(errCode, fmt.Sprintf("%s 必须在 %s", rk, vn[3:]))
 					}
 				} else if strings.HasPrefix(vn, "gt:") {
 					switch f.Type.Kind() {
 					case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 						max, _ := strconv.ParseInt(vn[3:], 10, 64)
 						if max >= o.Int() {
-							gerr.Error(errCode, fmt.Sprintf("%s 必须大于%d", rk, max))
+							gutils.Error(errCode, fmt.Sprintf("%s 必须大于%d", rk, max))
 						}
 					case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
 						max, _ := strconv.ParseUint(vn[3:], 10, 64)
 						if max >= o.Uint() {
-							gerr.Error(errCode, fmt.Sprintf("%s 必须大于%d", rk, max))
+							gutils.Error(errCode, fmt.Sprintf("%s 必须大于%d", rk, max))
 						}
 					case reflect.Float32, reflect.Float64:
 						max, _ := strconv.ParseFloat(vn[3:], 64)
 						if max >= o.Float() {
-							gerr.Error(errCode, fmt.Sprintf("%s 必须大于%f", rk, max))
+							gutils.Error(errCode, fmt.Sprintf("%s 必须大于%f", rk, max))
 						}
 					}
 				} else if strings.HasPrefix(vn, "ge:") {
@@ -253,17 +253,17 @@ func (engine *EngineCtx) Verify(obj interface{}) {
 					case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 						max, _ := strconv.ParseInt(vn[3:], 10, 64)
 						if max > o.Int() {
-							gerr.Error(errCode, fmt.Sprintf("%s 必须大于等于%d", rk, max))
+							gutils.Error(errCode, fmt.Sprintf("%s 必须大于等于%d", rk, max))
 						}
 					case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
 						max, _ := strconv.ParseUint(vn[3:], 10, 64)
 						if max > o.Uint() {
-							gerr.Error(errCode, fmt.Sprintf("%s 必须大于等于%d", rk, max))
+							gutils.Error(errCode, fmt.Sprintf("%s 必须大于等于%d", rk, max))
 						}
 					case reflect.Float32, reflect.Float64:
 						max, _ := strconv.ParseFloat(vn[3:], 64)
 						if max > o.Float() {
-							gerr.Error(errCode, fmt.Sprintf("%s 必须大于等于%f", rk, max))
+							gutils.Error(errCode, fmt.Sprintf("%s 必须大于等于%f", rk, max))
 						}
 					}
 				} else if strings.HasPrefix(vn, "lt:") {
@@ -271,17 +271,17 @@ func (engine *EngineCtx) Verify(obj interface{}) {
 					case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 						max, _ := strconv.ParseInt(vn[3:], 10, 64)
 						if max <= o.Int() {
-							gerr.Error(errCode, fmt.Sprintf("%s 必须小于%d", rk, max))
+							gutils.Error(errCode, fmt.Sprintf("%s 必须小于%d", rk, max))
 						}
 					case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
 						max, _ := strconv.ParseUint(vn[3:], 10, 64)
 						if max <= o.Uint() {
-							gerr.Error(errCode, fmt.Sprintf("%s 必须小于%d", rk, max))
+							gutils.Error(errCode, fmt.Sprintf("%s 必须小于%d", rk, max))
 						}
 					case reflect.Float32, reflect.Float64:
 						max, _ := strconv.ParseFloat(vn[3:], 64)
 						if max <= o.Float() {
-							gerr.Error(errCode, fmt.Sprintf("%s 必须小于%f", rk, max))
+							gutils.Error(errCode, fmt.Sprintf("%s 必须小于%f", rk, max))
 						}
 					}
 				} else if strings.HasPrefix(vn, "le:") {
@@ -289,17 +289,17 @@ func (engine *EngineCtx) Verify(obj interface{}) {
 					case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 						max, _ := strconv.ParseInt(vn[3:], 10, 64)
 						if max < o.Int() {
-							gerr.Error(errCode, fmt.Sprintf("%s 必须小于等于%d", rk, max))
+							gutils.Error(errCode, fmt.Sprintf("%s 必须小于等于%d", rk, max))
 						}
 					case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
 						max, _ := strconv.ParseUint(vn[3:], 10, 64)
 						if max < o.Uint() {
-							gerr.Error(errCode, fmt.Sprintf("%s 必须小于等于%d", rk, max))
+							gutils.Error(errCode, fmt.Sprintf("%s 必须小于等于%d", rk, max))
 						}
 					case reflect.Float32, reflect.Float64:
 						max, _ := strconv.ParseFloat(vn[3:], 64)
 						if max < o.Float() {
-							gerr.Error(errCode, fmt.Sprintf("%s 必须小于等于%f", rk, max))
+							gutils.Error(errCode, fmt.Sprintf("%s 必须小于等于%f", rk, max))
 						}
 					}
 				} else if strings.HasPrefix(vn, "eq:") {
@@ -307,21 +307,21 @@ func (engine *EngineCtx) Verify(obj interface{}) {
 					case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 						max, _ := strconv.ParseInt(vn[3:], 10, 64)
 						if max != o.Int() {
-							gerr.Error(errCode, fmt.Sprintf("%s 必须等于%d", rk, max))
+							gutils.Error(errCode, fmt.Sprintf("%s 必须等于%d", rk, max))
 						}
 					case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
 						max, _ := strconv.ParseUint(vn[3:], 10, 64)
 						if max != o.Uint() {
-							gerr.Error(errCode, fmt.Sprintf("%s 必须等于%d", rk, max))
+							gutils.Error(errCode, fmt.Sprintf("%s 必须等于%d", rk, max))
 						}
 					case reflect.Float32, reflect.Float64:
 						max, _ := strconv.ParseFloat(vn[3:], 64)
 						if max != o.Float() {
-							gerr.Error(errCode, fmt.Sprintf("%s 必须等于%f", rk, max))
+							gutils.Error(errCode, fmt.Sprintf("%s 必须等于%f", rk, max))
 						}
 					case reflect.String:
 						if vn[3:] != o.String() {
-							gerr.Error(errCode, fmt.Sprintf("%s 必须等于%s", rk, vn[3:]))
+							gutils.Error(errCode, fmt.Sprintf("%s 必须等于%s", rk, vn[3:]))
 						}
 					}
 
@@ -330,21 +330,21 @@ func (engine *EngineCtx) Verify(obj interface{}) {
 					case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 						max, _ := strconv.ParseInt(vn[3:], 10, 64)
 						if max == o.Int() {
-							gerr.Error(errCode, fmt.Sprintf("%s 必须不等于%d", rk, max))
+							gutils.Error(errCode, fmt.Sprintf("%s 必须不等于%d", rk, max))
 						}
 					case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
 						max, _ := strconv.ParseUint(vn[3:], 10, 64)
 						if max == o.Uint() {
-							gerr.Error(errCode, fmt.Sprintf("%s 必须不等于%d", rk, max))
+							gutils.Error(errCode, fmt.Sprintf("%s 必须不等于%d", rk, max))
 						}
 					case reflect.Float32, reflect.Float64:
 						max, _ := strconv.ParseFloat(vn[3:], 64)
 						if max == o.Float() {
-							gerr.Error(errCode, fmt.Sprintf("%s 必须不等于%f", rk, max))
+							gutils.Error(errCode, fmt.Sprintf("%s 必须不等于%f", rk, max))
 						}
 					case reflect.String:
 						if vn[3:] == o.String() {
-							gerr.Error(errCode, fmt.Sprintf("%s 必须不等于%s", rk, vn[3:]))
+							gutils.Error(errCode, fmt.Sprintf("%s 必须不等于%s", rk, vn[3:]))
 						}
 					}
 				}

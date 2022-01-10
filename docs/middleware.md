@@ -5,7 +5,7 @@
 ```go
 web.RegisterMiddleWare(func (ctx *web.EngineCtx, f func (*web.EngineCtx)) {
 //before处理
-gerr.Error(500, "服务器繁忙") //报错退出功能
+gutils.Error(500, "服务器繁忙") //报错退出功能
 f(ctx)
 //after处理
 })

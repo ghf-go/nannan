@@ -1,8 +1,8 @@
 package web
 
 import (
-	"github.com/ghf-go/nannan/gerr"
 	"github.com/ghf-go/nannan/glog"
+	"github.com/ghf-go/nannan/gutils"
 	"reflect"
 	"strings"
 )
@@ -68,7 +68,7 @@ func (r *RouterGroup) ANY(path string, funcName func(ctx *EngineCtx) error) {
 func (r *RouterGroup) run(engineCtx *EngineCtx) {
 	defer func() {
 		if e := recover(); e != nil {
-			if gerr.IsError(e) {
+			if gutils.IsError(e) {
 				e2 := e.(gerr.BaseErr)
 				glog.Error("系统错误 %d %s", e2.Code, e2.Msg)
 				engineCtx.JsonFail(e2.Code, e2.Msg)

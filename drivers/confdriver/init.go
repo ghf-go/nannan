@@ -7,6 +7,7 @@ import (
 )
 
 type Conf struct {
+	Raw      string
 	Scheme   string
 	Host     string
 	Port     int
@@ -48,6 +49,7 @@ func BuildConf(data string) Conf {
 		return Conf{}
 	}
 	ret := Conf{
+		Raw:      data,
 		Scheme:   u.Scheme,
 		Host:     u.Hostname(),
 		UserName: u.User.Username(),
@@ -79,4 +81,18 @@ func (c Conf) String() string {
 	r.WriteString("/" + c.Path + "?")
 	r.WriteString(c.Args.Encode())
 	return r.String()
+}
+func (conf Conf) GetArgs(name string) string {
+	return conf.Args.Get(name)
+}
+func (conf Conf) GetArgInt(name string) int {
+	s := conf.Args.Get(name)
+	if s == "" {
+		return 0
+	}
+	r, e := strconv.Atoi(s)
+	if e != nil {
+		return 0
+	}
+	return r
 }

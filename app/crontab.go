@@ -11,7 +11,7 @@ var (
 	_crontabMap = map[string]drivers.CrontabDriver{}
 )
 
-func RegisterCrontan(name, timer string, isLock bool, callfunc func()) {
+func RegisterCrontab(name, timer string, isLock bool, callfunc func()) {
 	_, p, _, _ := runtime.Caller(1)
 	_crontabMap[name] = drivers.CrontabDriver{
 		Timer:    timer,
