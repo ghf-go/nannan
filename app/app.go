@@ -7,10 +7,6 @@ import (
 	"strings"
 )
 
-var (
-	_run = true
-)
-
 func Run() {
 	la := len(os.Args)
 	if la == 1 {
@@ -28,10 +24,4 @@ func Run() {
 		}
 
 	}
-}
-func IsRun() bool {
-	return _run
-}
-func Exit() {
-	_run = false
 }

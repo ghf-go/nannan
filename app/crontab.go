@@ -26,6 +26,7 @@ func crontab(args []string) {
 	case 1:
 		if f, ok := _crontabMap[args[0]]; ok {
 			f.CallFunc()
+			Wait()
 		} else {
 			fmt.Printf("%s 不存在", args[0])
 		}

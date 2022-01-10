@@ -20,6 +20,7 @@ func service(args []string) {
 	case 1:
 		if f, ok := _serviceMap[args[0]]; ok {
 			f()
+			Wait()
 		} else {
 			fmt.Printf("%s 服务不存在", args[0])
 		}

@@ -20,10 +20,10 @@ func GetEsClient(conName string) *EsClient {
 		return r
 	}
 	conf := gconf.GetConf("es." + conName)
-	hosts := strings.Split(conf.GetPath(), ",")
+	hosts := strings.Split(conf.Path, ",")
 	r := &EsClient{
 		hosts:     hosts,
-		dbName:    conf.GetHost(),
+		dbName:    conf.Host,
 		reqIndex:  0,
 		hostCount: len(hosts),
 	}
