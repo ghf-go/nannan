@@ -1,19 +1,38 @@
 package test
 
-import "github.com/ghf-go/nannan/mod"
+import (
+	"github.com/ghf-go/nannan/def"
+	"github.com/ghf-go/nannan/mod"
+)
 
 func esSave(args []string) {
-	mod.Debug("se-save")
+	es := mod.GetEsClient("es")
+
+	mod.Debug("se-save %v", es.Update("users", "1234", def.Data{"name": "张三"}))
 }
 func esDelete(args []string) {
-	mod.Debug("se-delete")
+	es := mod.GetEsClient("es")
+	mod.Debug("se-delete %v ", es.Delete("users", "1234"))
 }
+
+type User struct {
+	Id   string `es_field:"_id"`
+	Name string `es_field:"name"`
+}
+
 func esFind(args []string) {
-	mod.Debug("se-find")
+	es := mod.GetEsClient("es")
+	obj := &User{}
+	mod.Debug("se-find %v %v", es.Find("users", "1234", obj), obj)
 }
 func esMget(args []string) {
-	mod.Debug("se-mget")
+	es := mod.GetEsClient("es")
+	data := map[string]User{}
+	e := es.MGet("users", data, "1234")
+	mod.Debug("se-mget %v %v", e, data)
 }
 func esSearch(args []string) {
-	mod.Debug("se-search")
+	data := map[string]interface{}{}
+	e := mod.GetEsClient("es").NewQuery("users").Query(data)
+	mod.Debug("se-search %v %v", e, data)
 }

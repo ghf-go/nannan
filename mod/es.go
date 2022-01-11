@@ -1,6 +1,7 @@
 package mod
 
 import (
+	"fmt"
 	"github.com/ghf-go/nannan/drivers/es_driver"
 	"strings"
 )
@@ -12,10 +13,16 @@ var (
 // 创建Es客户端
 func NewEsClient(confKeyName string) *es_driver.EsClient {
 	conf := GetConf(confKeyName)
-	hosts := strings.Split(conf.Path, ",")
+	hosts := []string{
+		fmt.Sprintf("%s:%d", conf.Host, conf.Port),
+	}
+	if conf.GetArgs("servers") != "" {
+		hosts = append(hosts, strings.Split(conf.GetArgs("servers"), ",")...)
+	}
+
 	r := &es_driver.EsClient{
 		Hosts:     hosts,
-		DbName:    conf.Host,
+		DbName:    conf.Path,
 		ReqIndex:  0,
 		HostCount: len(hosts),
 	}

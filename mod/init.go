@@ -8,11 +8,11 @@ import (
 
 var (
 	_conf def.ConfDriver
-	_log  *log_driver.GLog
+	_log  *def.GLog
 )
 
 func init() {
-	_conf = NewConfDriver(os.Getenv("envinit"))
-	_log = log_driver.NewGLog(log_driver.LOG_LEVEL_DEBUG)
+	_conf = NewConfDriver(os.Getenv("init"))
+	_log = log_driver.NewGLog(def.LOG_LEVEL_DEBUG)
 
 }

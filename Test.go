@@ -1,9 +1,14 @@
 package main
 
-import "github.com/ghf-go/nannan/app"
+import (
+	"github.com/ghf-go/nannan/app"
+	"os"
+)
 import _ "github.com/ghf-go/nannan/test"
 
 func main() {
+	os.Setenv("init", "")
+	os.Setenv("es", "es://127.0.0.1:9200/dev_test")
 	//l := log_driver.NewGLog(log_driver.LOG_LEVEL_DEBUG)
 	//l.Register(log_driver.NewLogKafkaDriver(drivers.NewKafkaWrite("127.0.0.1:9092", "test001"), log_driver.LOG_LEVEL_DEBUG))
 	////l.Register(log_driver.NewLogStdDriver(log_driver.LOG_LEVEL_DEBUG))

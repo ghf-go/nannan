@@ -34,6 +34,9 @@ func (eq *esQeury) Size(size int) *esQeury {
 	return eq
 }
 func (eq *esQeury) buildMap() map[string]interface{} {
+	if eq.size == 0 {
+		eq.size = 10
+	}
 	return map[string]interface{}{
 		"from": eq.from,
 		"size": eq.size,
@@ -226,5 +229,10 @@ func (eq *esQeury) Missing(key string) *esQeury {
 	return eq.mustnotkv("exists", "field", key)
 }
 func (eq *esQeury) Query(obj interface{}) error {
-	return eq.do(http.MethodPost, eq.getHost()+eq.tbName+"/_search", eq.buildMap(), obj)
+	ret := &esSearchResponse{}
+	e := eq.do(http.MethodPost, eq.getHost()+eq.tbName+"/_search", eq.buildMap(), ret)
+	if e != nil {
+		return e
+	}
+	return ret.saveObj(obj)
 }
