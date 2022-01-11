@@ -1,8 +1,6 @@
-package mq_driver
+package def
 
-import (
-	"time"
-)
+import "time"
 
 type MqDriver interface {
 	Send(string, string)

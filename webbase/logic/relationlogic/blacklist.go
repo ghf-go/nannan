@@ -2,7 +2,7 @@ package relationlogic
 
 import (
 	"context"
-	"github.com/ghf-go/nannan/db"
+	"github.com/ghf-go/nannan/def"
 	"github.com/ghf-go/nannan/webbase/logic"
 	"strconv"
 )
@@ -12,7 +12,7 @@ func AddBlackList(uid, targetid int64) bool {
 	if InBlackList(uid, targetid) {
 		return true
 	}
-	isOk := logic.GetTable(tb_relation_blacklist).InsertMap(db.Data{
+	isOk := logic.GetTable(tb_relation_blacklist).InsertMap(def.Data{
 		"user_id":        uid,
 		"target_user_id": targetid,
 	}) > 0

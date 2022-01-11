@@ -2,7 +2,7 @@ package mq_driver
 
 import (
 	"context"
-	"github.com/ghf-go/nannan/app"
+	"github.com/ghf-go/nannan/def"
 	"github.com/go-redis/redis/v8"
 	"time"
 )
@@ -11,6 +11,11 @@ type MqRedisDriver struct {
 	redis *redis.Client
 }
 
+func NewMqRedisDriver(r *redis.Client) *MqRedisDriver {
+	return &MqRedisDriver{
+		redis: r,
+	}
+}
 func (m *MqRedisDriver) Send(key, msg string) {
 	m.redis.LPush(context.Background(), key, msg)
 }
@@ -24,8 +29,8 @@ func (m *MqRedisDriver) SendTopic(key, msg string) {
 	m.redis.Publish(context.Background(), key, msg)
 }
 
-func (m *MqRedisDriver) ConsumerMq(callfunc func(string, string, MqDriver), topics ...string) {
-	for app.IsRun() {
+func (m *MqRedisDriver) ConsumerMq(callfunc func(string, string, def.MqDriver), topics ...string) {
+	for def.IsRun() {
 		r, e := m.redis.BRPop(context.Background(), time.Second*60, topics...).Result()
 		if e != nil {
 			continue
@@ -37,8 +42,8 @@ func (m *MqRedisDriver) ConsumerMq(callfunc func(string, string, MqDriver), topi
 		}
 	}
 }
-func (m *MqRedisDriver) ConsumerMqDelay(callfunc func(string, string, MqDriver), topics ...string) {
-	for app.IsRun() {
+func (m *MqRedisDriver) ConsumerMqDelay(callfunc func(string, string, def.MqDriver), topics ...string) {
+	for def.IsRun() {
 		for _, topic := range topics {
 			r, e := m.redis.ZRangeWithScores(context.Background(), topic, 0, time.Now().Unix()).Result()
 			if e != nil {
@@ -51,9 +56,9 @@ func (m *MqRedisDriver) ConsumerMqDelay(callfunc func(string, string, MqDriver),
 
 	}
 }
-func (m *MqRedisDriver) ConsumerTopic(callfunc func(string, string, MqDriver), topics ...string) {
+func (m *MqRedisDriver) ConsumerTopic(callfunc func(string, string, def.MqDriver), topics ...string) {
 	r := m.redis.Subscribe(context.Background(), topics...)
-	for app.IsRun() {
+	for def.IsRun() {
 		msg, e := r.ReceiveMessage(context.Background())
 		if e != nil {
 			continue

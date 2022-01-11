@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+	"github.com/ghf-go/nannan/def"
 	"os"
 )
 
@@ -20,7 +21,7 @@ func cli(args []string) {
 	} else {
 		if f, ok := _cliMap[args[0]]; ok {
 			f(args[1:])
-			Wait()
+			def.Wait()
 		} else {
 			fmt.Printf("%s  cli %s 命令不存在", os.Args[0], args[0])
 		}

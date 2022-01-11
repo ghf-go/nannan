@@ -1,18 +1,26 @@
 package limitrate_driver
 
 import (
+	"github.com/ghf-go/nannan/def"
 	"sync"
 	"time"
 )
 
-type tokenLimitMemDriver struct {
+type TokenLimitMemDriver struct {
 	sync.Mutex
 	maxReq     int
 	timeWindow time.Duration
 	data       map[string]int
 }
 
-func (t *tokenLimitMemDriver) GetToken(key string) bool {
+func NewTokenLimitMemDriver(conf def.Conf) *TokenLimitMemDriver {
+	return &TokenLimitMemDriver{
+		maxReq:     conf.Port,
+		timeWindow: time.Duration(conf.GetArgInt("time_window")) * time.Second,
+		data:       map[string]int{},
+	}
+}
+func (t *TokenLimitMemDriver) GetToken(key string) bool {
 	if k, ok := t.data[key]; ok {
 		if k > 0 {
 			t.Lock()
@@ -30,12 +38,13 @@ func (t *tokenLimitMemDriver) GetToken(key string) bool {
 	}
 	return true
 }
-func (t *tokenLimitMemDriver) Start() {
-	t.Lock()
-	for k, _ := range t.data {
-		t.data[k] = t.maxReq
+func (t *TokenLimitMemDriver) Start() {
+	for def.IsRun() {
+		t.Lock()
+		for k := range t.data {
+			t.data[k] = t.maxReq
+		}
+		t.Unlock()
+		time.Sleep(t.timeWindow)
 	}
-	t.Unlock()
-	time.Sleep(t.timeWindow)
-	t.Start()
 }

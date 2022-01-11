@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+	"github.com/ghf-go/nannan/def"
 	"github.com/ghf-go/nannan/drivers/cli_driver"
 	"os"
 	"runtime"
@@ -26,7 +27,7 @@ func crontab(args []string) {
 	case 1:
 		if f, ok := _crontabMap[args[0]]; ok {
 			f.CallFunc()
-			Wait()
+			def.Wait()
 		} else {
 			fmt.Printf("%s 不存在", args[0])
 		}

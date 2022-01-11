@@ -2,7 +2,7 @@ package accountlogic
 
 import (
 	"fmt"
-	"github.com/ghf-go/nannan/db"
+	"github.com/ghf-go/nannan/def"
 	"github.com/ghf-go/nannan/gutils"
 	"github.com/ghf-go/nannan/webbase/logic"
 	"time"
@@ -15,7 +15,7 @@ const (
 func SetPasswd(uid int64, pass string) bool {
 	row := &modelUserPasswd{}
 	sign := fmt.Sprintf("%d", time.Now().UnixNano()%10000)
-	setData := db.Data{
+	setData := def.Data{
 		"sign":   sign,
 		"passwd": buildPass(pass, sign),
 	}

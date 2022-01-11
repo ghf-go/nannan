@@ -1,13 +1,13 @@
 package commentlogic
 
 import (
-	"github.com/ghf-go/nannan/db"
+	"github.com/ghf-go/nannan/def"
 	"github.com/ghf-go/nannan/webbase/logic"
 	"strconv"
 )
 
 func NewFeed(userid int64, FeedType int, FeedDesc, FeedImgs string, x, y float64, city, ext, content string) {
-	id := logic.GetTable(tb_comment_feed).InsertMap(db.Data{
+	id := logic.GetTable(tb_comment_feed).InsertMap(def.Data{
 		"user_id":   userid,
 		"feed_type": FeedType,
 		"feed_desc": FeedDesc,

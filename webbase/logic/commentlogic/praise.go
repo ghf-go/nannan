@@ -2,7 +2,7 @@ package commentlogic
 
 import (
 	"context"
-	"github.com/ghf-go/nannan/db"
+	"github.com/ghf-go/nannan/def"
 	"github.com/ghf-go/nannan/webbase/logic"
 	"strconv"
 )
@@ -11,7 +11,7 @@ func Praise(uid int64, targetId int64, targetType int) bool {
 	if IsPraise(uid, targetId, targetType) {
 		return true
 	}
-	ret := logic.GetTable(tb_comment_praise).InsertMap(db.Data{
+	ret := logic.GetTable(tb_comment_praise).InsertMap(def.Data{
 		"user_id":     uid,
 		"target_id":   targetId,
 		"target_type": targetType,
@@ -46,7 +46,7 @@ func PraiseMap(uid int64, targetType int) map[int64]bool {
 	if e != nil {
 		return ret
 	}
-	for k, _ := range r {
+	for k := range r {
 		tid, e := strconv.ParseInt(k, 10, 64)
 		if e == nil {
 			ret[tid] = true

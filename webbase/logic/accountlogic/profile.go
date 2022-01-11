@@ -3,7 +3,7 @@ package accountlogic
 import (
 	"context"
 	"fmt"
-	"github.com/ghf-go/nannan/db"
+	"github.com/ghf-go/nannan/def"
 	"github.com/ghf-go/nannan/webbase/logic"
 	"time"
 )
@@ -37,7 +37,7 @@ func GetProfileByUid(uid int64) map[string]string {
 func SetProfile(uid int64, data map[string]interface{}) {
 	for k, v := range data {
 		if logic.CreateQuery(tb_user_profile).Where("user_id=? AND `key`=?", uid, k).Count("id") > 0 {
-			logic.CreateQuery(tb_user_profile).Where("user_id=? AND `key`=?", uid, k).UpdateMap(db.Data{"val": v})
+			logic.CreateQuery(tb_user_profile).Where("user_id=? AND `key`=?", uid, k).UpdateMap(def.Data{"val": v})
 		} else {
 			logic.GetTable(tb_user_profile).InsertMap(map[string]interface{}{
 				"user_id": uid,

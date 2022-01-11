@@ -1,6 +1,7 @@
 package limitrate_driver
 
 import (
+	"github.com/ghf-go/nannan/def"
 	"sync"
 	"time"
 )
@@ -19,6 +20,14 @@ type IpLimiterMemDriver struct {
 	data map[string]*ipLimiterMemGroup
 }
 
+func NewIpLimiterMemDriver(conf def.Conf) *IpLimiterMemDriver {
+	ret := &IpLimiterMemDriver{
+		data: map[string]*ipLimiterMemGroup{},
+	}
+	go ret.Start()
+	return ret
+}
+
 func (rate *IpLimiterMemDriver) Check(groupName, ip string, maxReq int, timeWindow time.Duration) bool {
 	var group *ipLimiterMemGroup
 	var ipItem *ipLimiterMemIP
@@ -26,7 +35,7 @@ func (rate *IpLimiterMemDriver) Check(groupName, ip string, maxReq int, timeWind
 		group = g
 
 	} else {
-		group = &ipLimiterMemGroup{data: map[string]*ipLimiterMemIP{ip: &ipLimiterMemIP{lastTime: time.Now().Add(timeWindow), val: 1}}}
+		group = &ipLimiterMemGroup{data: map[string]*ipLimiterMemIP{ip: {lastTime: time.Now().Add(timeWindow), val: 1}}}
 		rate.Lock()
 		rate.data[groupName] = group
 		rate.Unlock()
@@ -57,20 +66,22 @@ func (rate *IpLimiterMemDriver) Check(groupName, ip string, maxReq int, timeWind
 }
 
 func (rate *IpLimiterMemDriver) Start() {
-	rate.Lock()
-	for k, g := range rate.data {
-		g.Lock()
-		for ip, item := range g.data {
-			if time.Now().Nanosecond() > item.lastTime.Nanosecond() {
-				delete(g.data, ip)
+	for def.IsRun() {
+		rate.Lock()
+		for k, g := range rate.data {
+			g.Lock()
+			for ip, item := range g.data {
+				if time.Now().Nanosecond() > item.lastTime.Nanosecond() {
+					delete(g.data, ip)
+				}
+			}
+			g.Unlock()
+			if len(g.data) == 0 {
+				delete(rate.data, k)
 			}
 		}
-		g.Unlock()
-		if len(g.data) == 0 {
-			delete(rate.data, k)
-		}
+		rate.Unlock()
+		time.Sleep(time.Second * 600)
 	}
-	rate.Unlock()
-	time.Sleep(time.Second * 600)
-	rate.Start()
+
 }

@@ -1,12 +1,12 @@
 package commentlogic
 
 import (
-	"github.com/ghf-go/nannan/db"
+	"github.com/ghf-go/nannan/def"
 	"github.com/ghf-go/nannan/webbase/logic"
 )
 
 func NewComment(uid, targetid, parent_id int64, targetType int, content string) *CommentModel {
-	id := logic.GetTable(tb_comment_reply).InsertMap(db.Data{
+	id := logic.GetTable(tb_comment_reply).InsertMap(def.Data{
 		"user_id":     uid,
 		"target_id":   targetid,
 		"parent_id":   parent_id,
@@ -16,7 +16,7 @@ func NewComment(uid, targetid, parent_id int64, targetType int, content string) 
 	})
 	if id > 0 {
 		if parent_id > 0 {
-			logic.CreateQuery(tb_comment_reply).Where("id=?", parent_id).UpdateMap(db.Data{"reply_count+": 1})
+			logic.CreateQuery(tb_comment_reply).Where("id=?", parent_id).UpdateMap(def.Data{"reply_count+": 1})
 		}
 		ret := &CommentModel{}
 		if logic.CreateQuery(tb_comment_reply).Where("id=?", id).Frist(ret) == nil {

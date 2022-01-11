@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+	"github.com/ghf-go/nannan/def"
 	"github.com/ghf-go/nannan/drivers/cli_driver"
 	"os"
 	"runtime"
@@ -20,7 +21,7 @@ func service(args []string) {
 	case 1:
 		if f, ok := _serviceMap[args[0]]; ok {
 			f()
-			Wait()
+			def.Wait()
 		} else {
 			fmt.Printf("%s 服务不存在", args[0])
 		}

@@ -2,7 +2,7 @@ package commonlogic
 
 import (
 	"context"
-	"github.com/ghf-go/nannan/db"
+	"github.com/ghf-go/nannan/def"
 	"github.com/ghf-go/nannan/webbase/logic"
 )
 
@@ -14,7 +14,7 @@ func GetConfByGroupID(groupid int64) map[string]string {
 	return r
 }
 func NewConf(group_id int64, val_type int, key, desc, val string) {
-	id := logic.GetTable(tb_system_conf).InsertMap(db.Data{
+	id := logic.GetTable(tb_system_conf).InsertMap(def.Data{
 		"group_id": group_id,
 		"key":      key,
 		"desc":     desc,

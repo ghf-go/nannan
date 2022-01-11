@@ -2,7 +2,7 @@ package relationlogic
 
 import (
 	"context"
-	"github.com/ghf-go/nannan/db"
+	"github.com/ghf-go/nannan/def"
 	"github.com/ghf-go/nannan/webbase/logic"
 	"strconv"
 )
@@ -16,12 +16,12 @@ func ApplyFriend(uid, targetId int64, msg string) bool {
 		return AuditFriend(uid, targetId, true)
 	default:
 		table := logic.GetTable(tb_relation_friends)
-		if table.InsertMap(db.Data{
+		if table.InsertMap(def.Data{
 			"user_id":   uid,
 			"target_id": targetId,
 			"apply_msg": msg,
 			"status":    FRIEND_STATUS_APPLY,
-		}) > 0 && table.InsertMap(db.Data{
+		}) > 0 && table.InsertMap(def.Data{
 			"user_id":   targetId,
 			"target_id": uid,
 			"apply_msg": msg,
@@ -44,7 +44,7 @@ func AuditFriend(uid, targetId int64, isOk bool) bool {
 		redis := logic.GetRedis()
 		table := logic.GetTable(tb_relation_friends)
 		if isOk {
-			if table.CreateQuery().Where("(user_id=? AND target_id=?) OR (user_id=? AND target_id=?)", uid, targetId, targetId, uid).UpdateMap(db.Data{"status": FRIEND_STATUS_OK}) > 0 {
+			if table.CreateQuery().Where("(user_id=? AND target_id=?) OR (user_id=? AND target_id=?)", uid, targetId, targetId, uid).UpdateMap(def.Data{"status": FRIEND_STATUS_OK}) > 0 {
 				redis.HSet(context.Background(), getRedisFriendKey(uid), strconv.FormatInt(targetId, 10), FRIEND_STATUS_OK)
 				redis.HSet(context.Background(), getRedisFriendKey(targetId), strconv.FormatInt(uid, 10), FRIEND_STATUS_OK)
 				return true

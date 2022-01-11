@@ -2,7 +2,7 @@ package commonlogic
 
 import (
 	"context"
-	"github.com/ghf-go/nannan/db"
+	"github.com/ghf-go/nannan/def"
 	"github.com/ghf-go/nannan/webbase/logic"
 	"strconv"
 )
@@ -22,7 +22,7 @@ func GetAllTagByGroupID(groupid int64) map[int64]string {
 	return ret
 }
 func NewTag(groupid int64, tagname string) {
-	id := logic.GetTable(tb_system_tags).InsertMap(db.Data{
+	id := logic.GetTable(tb_system_tags).InsertMap(def.Data{
 		"group_id": groupid,
 		"tag_name": tagname,
 	})

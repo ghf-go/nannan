@@ -7,15 +7,14 @@ import (
 )
 
 var (
-	_conf def.ConfDriver
-	//_log  *def.GLog
-	_logLevle = def.LOG_LEVEL_DEBUG
+	_conf        def.ConfDriver
+	_logLevle    = def.LOG_LEVEL_DEBUG
+	_limit_ip    def.IpLimiterDriver
+	_limit_token def.TokenLimiterDriver
 )
 
 func init() {
 	_conf = NewConfDriver(os.Getenv("init"))
 	_logLevle = def.LOG_LEVEL_DEBUG
 	log_driver.NewGLog(_logLevle)
-	//_log = log_driver.NewGLog(def.LOG_LEVEL_DEBUG)
-
 }

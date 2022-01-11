@@ -2,6 +2,7 @@ package commonlogic
 
 import (
 	"context"
+	"github.com/ghf-go/nannan/def"
 	"github.com/ghf-go/nannan/mod"
 	"github.com/ghf-go/nannan/webbase/logic"
 	"strconv"
@@ -24,7 +25,7 @@ func GetGroupAll() map[int64]string {
 	return ret
 }
 func NewGroup(groupName string) {
-	id := logic.GetTable(tb_system_group).InsertMap(db.Data{"group_name": groupName})
+	id := logic.GetTable(tb_system_group).InsertMap(def.Data{"group_name": groupName})
 	if id > 0 {
 		logic.GetRedis().HSet(context.Background(), _redisGroupKey, strconv.FormatInt(id, 10), groupName)
 	}
