@@ -1,6 +1,7 @@
 package conf_driver
 
 import (
+	"github.com/ghf-go/nannan/def"
 	"github.com/go-zookeeper/zk"
 	"strconv"
 )
@@ -58,8 +59,8 @@ func (c *ZookeeperDriver) GetFloat(key string) float64 {
 func (c *ZookeeperDriver) Del(key string) {
 	c.Set(key, "")
 }
-func (c *ZookeeperDriver) GetConf(key string) Conf {
-	return BuildConf(c.Get(key))
+func (c *ZookeeperDriver) GetConf(key string) def.Conf {
+	return def.BuildConf(c.Get(key))
 }
 func (c *ZookeeperDriver) Set(key, val string) {
 	if ok, s, _ := c.con.Exists(c.path + key); ok {
@@ -77,6 +78,6 @@ func (c *ZookeeperDriver) SetFloat(key string, val float64) {
 func (c *ZookeeperDriver) SetBool(key string, val bool) {
 	c.Set(key, strconv.FormatBool(val))
 }
-func (c *ZookeeperDriver) SetConf(key string, val Conf) {
+func (c *ZookeeperDriver) SetConf(key string, val def.Conf) {
 	c.Set(key, val.String())
 }

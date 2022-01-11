@@ -1,6 +1,7 @@
 package conf_driver
 
 import (
+	"github.com/ghf-go/nannan/def"
 	"os"
 	"strconv"
 	"strings"
@@ -50,8 +51,8 @@ func (c EnvDriver) GetFloat(key string) float64 {
 func (c EnvDriver) Del(key string) {
 	c.Set(key, "")
 }
-func (c EnvDriver) GetConf(key string) Conf {
-	return BuildConf(c.Get(key))
+func (c EnvDriver) GetConf(key string) def.Conf {
+	return def.BuildConf(c.Get(key))
 }
 func (c EnvDriver) Set(key, val string) {
 	os.Setenv(key, val)
@@ -65,6 +66,6 @@ func (c EnvDriver) SetFloat(key string, val float64) {
 func (c EnvDriver) SetBool(key string, val bool) {
 	c.Set(key, strconv.FormatBool(val))
 }
-func (c EnvDriver) SetConf(key string, val Conf) {
+func (c EnvDriver) SetConf(key string, val def.Conf) {
 	c.Set(key, val.String())
 }

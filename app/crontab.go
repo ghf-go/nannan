@@ -2,18 +2,18 @@ package app
 
 import (
 	"fmt"
-	"github.com/ghf-go/nannan/drivers"
+	"github.com/ghf-go/nannan/drivers/cli_driver"
 	"os"
 	"runtime"
 )
 
 var (
-	_crontabMap = map[string]drivers.CrontabDriver{}
+	_crontabMap = map[string]cli_driver.CrontabDriver{}
 )
 
 func RegisterCrontab(name, timer string, isLock bool, callfunc func()) {
 	_, p, _, _ := runtime.Caller(1)
-	_crontabMap[name] = drivers.CrontabDriver{
+	_crontabMap[name] = cli_driver.CrontabDriver{
 		Timer:    timer,
 		IsLock:   false,
 		Cmd:      fmt.Sprintf("%s crontab %s", p, name),

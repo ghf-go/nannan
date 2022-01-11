@@ -27,10 +27,12 @@ type GLog struct {
 }
 
 func NewGLog(level int) *GLog {
-	return &GLog{
+	r := &GLog{
 		Level: level,
 		logs:  map[int][]logDriver{},
 	}
+	r.Register(NewLogStdDriver(LOG_LEVEL_DEBUG))
+	return r
 }
 func NewLogStdDriver(level ...int) *LogStdDriver {
 	return &LogStdDriver{leves: level}
@@ -62,7 +64,7 @@ func (l *GLog) Register(ll logDriver) {
 func (l *GLog) format(level, format string, v ...interface{}) string {
 	file := ""
 	line := 0
-	_, f, ln, ok := runtime.Caller(2)
+	_, f, ln, ok := runtime.Caller(3)
 
 	if ok {
 		file = f

@@ -2,7 +2,7 @@ package app
 
 import (
 	"fmt"
-	"github.com/ghf-go/nannan/drivers"
+	"github.com/ghf-go/nannan/drivers/cli_driver"
 	"os"
 	"runtime"
 )
@@ -27,7 +27,7 @@ func service(args []string) {
 	case 2:
 		if _, ok := _serviceMap[args[0]]; ok {
 			_, p, _, _ := runtime.Caller(1)
-			s := drivers.SystemService{
+			s := cli_driver.SystemService{
 				Cmd:  fmt.Sprintf("%s service %s", p, args[0]),
 				Name: args[0],
 				Desc: args[0],

@@ -1,4 +1,4 @@
-package drivers
+package cli_driver
 
 import (
 	"fmt"

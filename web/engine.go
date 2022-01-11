@@ -3,7 +3,7 @@ package web
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/ghf-go/nannan/drivers/limitrate"
+	"github.com/ghf-go/nannan/drivers/limitrate_driver"
 	"github.com/ghf-go/nannan/gutils"
 	"net"
 	"net/http"
@@ -41,12 +41,12 @@ func (engine *EngineCtx) json(code int, msg string, data interface{}) error {
 	return e
 }
 func (engine *EngineCtx) LimitIP(key string, maxReq int, timeWindow time.Duration) {
-	if !limitrate.GetIpLimiter().Check(key, engine.GetIP(), maxReq, timeWindow) {
-		gutils.Error(500, "操作过快")
-	}
+	//if !limitrate_driver.GetIpLimiter().Check(key, engine.GetIP(), maxReq, timeWindow) {
+	//	gutils.Error(500, "操作过快")
+	//}
 }
 func (engine *EngineCtx) LimitToken(key string) {
-	if !limitrate.GetTokenLimiter().GetToken(key) {
+	if !limitrate_driver.GetTokenLimiter().GetToken(key) {
 		gutils.Error(500, "服务器繁忙")
 	}
 }

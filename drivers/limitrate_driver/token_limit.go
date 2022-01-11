@@ -1,6 +1,7 @@
-package limitrate
+package limitrate_driver
 
 import (
+	"github.com/ghf-go/nannan/mod"
 	"time"
 )
 
@@ -16,16 +17,16 @@ func GetTokenLimiter() TokenLimiter {
 		return _tokenLimiter
 	}
 	conf := mod.GetConf("limiter.token")
-	switch conf.GetScheme() {
+	switch conf.Scheme {
 	case "redis":
 		_tokenLimiter = &tokenLimitRedisDriver{
-			redisConfName: conf.GetHost(),
-			maxReq:        conf.GetPort(),
+			redisConfName: conf.Host,
+			maxReq:        conf.Port,
 			timeWindow:    time.Duration(conf.GetArgInt("time_window")) * time.Second,
 		}
 	default:
 		_tokenLimiter = &tokenLimitMemDriver{
-			maxReq:     conf.GetPort(),
+			maxReq:     conf.Port,
 			timeWindow: time.Duration(conf.GetArgInt("time_window")) * time.Second,
 			data:       map[string]int{},
 		}

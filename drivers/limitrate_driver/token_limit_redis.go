@@ -1,4 +1,4 @@
-package limitrate
+package limitrate_driver
 
 import (
 	"sync"

@@ -3,7 +3,7 @@ package es_driver
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/ghf-go/nannan/mod"
+	"github.com/ghf-go/nannan/drivers"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -46,7 +46,7 @@ func (es *EsClient) do(method, url string, body interface{}, obj interface{}) er
 	if body != nil {
 		bb1, e := json.Marshal(body)
 		if e != nil {
-			mod.Error("ES 提交内容格式化 %s-> %s error:%s", method, url, e.Error())
+			drivers.Error("ES 提交内容格式化 %s-> %s error:%s", method, url, e.Error())
 			return e
 		}
 		bb = bytes.NewReader(bb1)
@@ -54,26 +54,26 @@ func (es *EsClient) do(method, url string, body interface{}, obj interface{}) er
 
 	req, e := http.NewRequest(method, url, bb)
 	if e != nil {
-		mod.Error("ES 创建请求结构体 %s-> %s error:%s", method, url, e.Error())
+		drivers.Error("ES 创建请求结构体 %s-> %s error:%s", method, url, e.Error())
 		return e
 	}
 	req.Header.Add("Content-Type", "application/json")
 	r, e := http.DefaultClient.Do(req)
 	if e != nil {
-		mod.Error("ES 发送数据 %s-> %s error:%s", method, url, e.Error())
+		drivers.Error("ES 发送数据 %s-> %s error:%s", method, url, e.Error())
 		return e
 	}
 
 	defer r.Body.Close()
 	buf, e := ioutil.ReadAll(r.Body)
 	if e != nil {
-		mod.Error("ES 读取返回 %s-> %s error:%s", method, url, e.Error())
+		drivers.Error("ES 读取返回 %s-> %s error:%s", method, url, e.Error())
 		return e
 	}
 
 	e = json.Unmarshal(buf, obj)
 	if e != nil {
-		mod.Error("ES 结果转换 %s-> %s error:", method, url, e.Error())
+		drivers.Error("ES 结果转换 %s-> %s error:", method, url, e.Error())
 		return e
 	}
 

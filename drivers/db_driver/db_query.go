@@ -3,7 +3,8 @@ package db_driver
 import (
 	"database/sql"
 	"fmt"
-	"github.com/ghf-go/nannan/mod"
+	"github.com/ghf-go/nannan/def"
+	"github.com/ghf-go/nannan/drivers"
 	"strings"
 )
 
@@ -93,7 +94,7 @@ func (q *Query) Order(name, order string) *Query {
 func (q *Query) Frist(obj interface{}) error {
 	r, e := q._fetch(getObjFieldStr(obj))
 	if e != nil {
-		mod.Error("sql 错误 %s", e.Error())
+		drivers.Error("sql 错误 %s", e.Error())
 		return e
 	}
 	return saveObj(r, obj)
@@ -115,7 +116,7 @@ func (q *Query) Limit(pagesize int) *Query {
 	return q
 }
 
-func (q *Query) UpdateMap(data Data) int64 {
+func (q *Query) UpdateMap(data def.Data) int64 {
 	sets := []string{}
 	args := []interface{}{}
 	for k, v := range data {

@@ -1,10 +1,35 @@
-package conf_driver
+package def
 
 import (
 	"net/url"
 	"strconv"
 	"strings"
 )
+
+func BuildConf(data string) Conf {
+	u, e := url.Parse(data)
+	if e != nil {
+		return Conf{}
+	}
+	ret := Conf{
+		Raw:      data,
+		Scheme:   u.Scheme,
+		Host:     u.Hostname(),
+		UserName: u.User.Username(),
+		Args:     u.Query(),
+	}
+	if len(u.Path) > 0 {
+		ret.Path = u.Path[1:]
+	}
+	if u.Port() != "" {
+		ret.Port, _ = strconv.Atoi(u.Port())
+	}
+	if p, e := u.User.Password(); e {
+		ret.PassWord = p
+	}
+
+	return ret
+}
 
 type Conf struct {
 	Raw      string
@@ -29,43 +54,6 @@ type ConfDriver interface {
 	SetFloat(key string, val float64)
 	SetBool(key string, val bool)
 	SetConf(key string, val Conf)
-}
-
-func NewConfDriver(data string) ConfDriver {
-	conf := BuildConf(data)
-	switch conf.Scheme {
-	case "ini":
-		return NewIniDriver(conf.Path)
-	case "etcd":
-		return NewEtcdDriverByConf(conf)
-	default:
-		return NewEnvDriver()
-
-	}
-}
-func BuildConf(data string) Conf {
-	u, e := url.Parse(data)
-	if e != nil {
-		return Conf{}
-	}
-	ret := Conf{
-		Raw:      data,
-		Scheme:   u.Scheme,
-		Host:     u.Hostname(),
-		UserName: u.User.Username(),
-		Args:     u.Query(),
-	}
-	if len(u.Path) > 0 {
-		ret.Path = u.Path[1:]
-	}
-	if u.Port() != "" {
-		ret.Port, _ = strconv.Atoi(u.Port())
-	}
-	if p, e := u.User.Password(); e {
-		ret.PassWord = p
-	}
-
-	return ret
 }
 
 func (c Conf) String() string {

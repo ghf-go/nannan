@@ -2,7 +2,7 @@ package mod
 
 import (
 	"fmt"
-	"github.com/ghf-go/nannan/drivers/conf_driver"
+	"github.com/ghf-go/nannan/def"
 	"github.com/ghf-go/nannan/gutils"
 	"github.com/go-redis/redis/v8"
 	"strings"
@@ -82,7 +82,7 @@ func GetRedisCluster(confKeyName string) *redis.ClusterClient {
 	return NewRedisCluster(confKeyName)
 }
 
-func newRedis(conf conf_driver.Conf) *redis.Client {
+func newRedis(conf def.Conf) *redis.Client {
 	opt := &redis.Options{
 		Addr:               fmt.Sprintf("%s:%d", conf.Host, conf.Port),
 		DialTimeout:        time.Second * 30,
@@ -111,7 +111,7 @@ func newRedis(conf conf_driver.Conf) *redis.Client {
 	r := redis.NewClient(opt)
 	return r
 }
-func newSentinel(conf conf_driver.Conf) *redis.Client {
+func newSentinel(conf def.Conf) *redis.Client {
 	server := conf.GetArgs("servers")
 	if server == "" {
 		Error("创建Redis失败 配置信息 %s", conf.Raw)

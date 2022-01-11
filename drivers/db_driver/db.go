@@ -4,12 +4,12 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"github.com/ghf-go/nannan/mod"
+	"github.com/ghf-go/nannan/def"
+	"github.com/ghf-go/nannan/drivers"
 	_ "github.com/go-sql-driver/mysql"
 	"strings"
 )
 
-type Data map[string]interface{}
 type DBCon struct {
 	db *sql.DB
 	tx *sql.Tx
@@ -25,7 +25,7 @@ func (dbc *DBCon) Close() {
 	dbc = nil
 }
 func (dbc *DBCon) Query(sql string, args ...interface{}) (*sql.Rows, error) {
-	mod.Debug("sql -> %s %v", sql, args)
+	drivers.Debug("sql -> %s %v", sql, args)
 	if dbc.tx == nil {
 		return dbc.db.Query(sql, args...)
 	}
@@ -33,7 +33,7 @@ func (dbc *DBCon) Query(sql string, args ...interface{}) (*sql.Rows, error) {
 }
 
 func (dbc *DBCon) Exec(sql string, args ...interface{}) (sql.Result, error) {
-	mod.Debug("sql -> %s %v", sql, args)
+	drivers.Debug("sql -> %s %v", sql, args)
 	if dbc.tx == nil {
 		return dbc.db.Exec(sql, args...)
 	}
@@ -64,7 +64,7 @@ func (dbc *DBCon) DeleteSql(sql string, args ...interface{}) int64 {
 	}
 	return n
 }
-func (dbc *DBCon) InsertByMap(tableName string, data Data) int64 {
+func (dbc *DBCon) InsertByMap(tableName string, data def.Data) int64 {
 	keys := []string{}
 	args := []interface{}{}
 	vs := []string{}

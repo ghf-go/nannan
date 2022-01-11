@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"github.com/ghf-go/nannan/mod"
+	"github.com/ghf-go/nannan/drivers"
 	"reflect"
 	"strings"
 	"time"
@@ -21,14 +21,14 @@ const (
 func saveObj(rows *sql.Rows, obj interface{}) error {
 	t := reflect.TypeOf(obj)
 	if t.Kind() != reflect.Ptr || t.Elem().Kind() != reflect.Struct {
-		mod.Error("错误 保存对象必须是指针对象 %s", t.Kind())
+		drivers.Error("错误 保存对象必须是指针对象 %s", t.Kind())
 		return errors.New("保存对象必须是指针对象")
 	}
 	t = t.Elem()
 	val := reflect.ValueOf(obj).Elem()
 	columns, e := rows.Columns()
 	if e != nil {
-		mod.Error("错误 %s", e.Error())
+		drivers.Error("错误 %s", e.Error())
 		return e
 	}
 	fm := _getColumMapByType(columns, t)
@@ -197,7 +197,7 @@ func _saveRow(rows *sql.Rows, cl int, fm map[int]int, t reflect.Type, obj reflec
 	}
 	e := rows.Scan(args...)
 	if e != nil {
-		mod.Error("cuowu %s", e.Error())
+		drivers.Error("cuowu %s", e.Error())
 		return e
 	}
 	if obj.Kind() == reflect.Ptr {

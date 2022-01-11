@@ -3,6 +3,7 @@ package conf_driver
 import (
 	"bytes"
 	"fmt"
+	"github.com/ghf-go/nannan/def"
 	"io/fs"
 	"io/ioutil"
 	"strconv"
@@ -57,8 +58,8 @@ func (c *IniDriver) Del(key string) {
 	delete(c.data, key)
 	c.save()
 }
-func (c *IniDriver) GetConf(key string) Conf {
-	return BuildConf(c.Get(key))
+func (c *IniDriver) GetConf(key string) def.Conf {
+	return def.BuildConf(c.Get(key))
 }
 func (c *IniDriver) Set(key, val string) {
 	c.data[key] = val
@@ -73,7 +74,7 @@ func (c *IniDriver) SetFloat(key string, val float64) {
 func (c *IniDriver) SetBool(key string, val bool) {
 	c.Set(key, strconv.FormatBool(val))
 }
-func (c *IniDriver) SetConf(key string, val Conf) {
+func (c *IniDriver) SetConf(key string, val def.Conf) {
 	c.Set(key, val.String())
 }
 

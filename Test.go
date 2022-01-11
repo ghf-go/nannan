@@ -1,10 +1,7 @@
 package main
 
-import (
-	"fmt"
-	"sync"
-	"time"
-)
+import "github.com/ghf-go/nannan/app"
+import _ "github.com/ghf-go/nannan/test"
 
 func main() {
 	//l := log_driver.NewGLog(log_driver.LOG_LEVEL_DEBUG)
@@ -29,17 +26,5 @@ func main() {
 	//
 	//webbase.RegisterRouter()
 	//app.Run()
-	a := true
-	w := sync.WaitGroup{}
-	w.Add(1)
-	go func() {
-		for a {
-			fmt.Println("测试内")
-			time.Sleep(time.Second * 1)
-		}
-		w.Done()
-	}()
-	time.Sleep(time.Second * 10)
-	a = false
-	w.Wait()
+	app.Run()
 }

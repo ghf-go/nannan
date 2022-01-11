@@ -2,6 +2,7 @@ package conf_driver
 
 import (
 	"context"
+	"github.com/ghf-go/nannan/def"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"strconv"
 )
@@ -24,7 +25,7 @@ func NewEtcdDriver(config clientv3.Config) *EtcdDriver {
 		conf:   config,
 	}
 }
-func NewEtcdDriverByConf(config Conf) *EtcdDriver {
+func NewEtcdDriverByConf(config def.Conf) *EtcdDriver {
 	ec := clientv3.Config{}
 	client, e := clientv3.New(ec)
 	if e != nil {
@@ -82,8 +83,8 @@ func (c *EtcdDriver) GetFloat(key string) float64 {
 func (c *EtcdDriver) Del(key string) {
 	c.client.Delete(c.ctx, c.path+key)
 }
-func (c *EtcdDriver) GetConf(key string) Conf {
-	return BuildConf(c.Get(key))
+func (c *EtcdDriver) GetConf(key string) def.Conf {
+	return def.BuildConf(c.Get(key))
 }
 func (c *EtcdDriver) Set(key, val string) {
 	c.client.Put(c.ctx, c.path+key, val)
@@ -98,6 +99,6 @@ func (c *EtcdDriver) SetFloat(key string, val float64) {
 func (c *EtcdDriver) SetBool(key string, val bool) {
 	c.Set(key, strconv.FormatBool(val))
 }
-func (c *EtcdDriver) SetConf(key string, val Conf) {
+func (c *EtcdDriver) SetConf(key string, val def.Conf) {
 	c.Set(key, val.String())
 }
