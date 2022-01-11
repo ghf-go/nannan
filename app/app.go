@@ -2,12 +2,14 @@ package app
 
 import (
 	"fmt"
+	"github.com/ghf-go/nannan/mod"
 	"github.com/ghf-go/nannan/web"
 	"os"
 	"strings"
 )
 
 func Run() {
+	mod.Debug("程序启动")
 	la := len(os.Args)
 	if la == 1 {
 		web.WebStart()

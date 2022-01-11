@@ -1,7 +1,6 @@
 package es_driver
 
 import (
-	"fmt"
 	"reflect"
 )
 
@@ -31,7 +30,6 @@ type esSearchResponse struct {
 }
 
 func (r *esSearchResponse) saveObj(obj interface{}) error {
-	fmt.Println(r)
 	t := reflect.TypeOf(obj)
 	objV := reflect.ValueOf(obj)
 	switch t.Kind() {

@@ -57,7 +57,6 @@ func (es *EsClient) do(method, url string, body interface{}, obj interface{}) er
 	var bb io.Reader
 	if body != nil {
 		bb1, e := json.Marshal(body)
-		//fmt.Println(string(bb1))
 		if e != nil {
 			drivers.Error("ES 提交内容格式化 %s-> %s error:%s", method, url, e.Error())
 			return e
@@ -79,7 +78,6 @@ func (es *EsClient) do(method, url string, body interface{}, obj interface{}) er
 
 	defer r.Body.Close()
 	buf, e := ioutil.ReadAll(r.Body)
-	//fmt.Println(string(buf))
 	if e != nil {
 		drivers.Error("ES 读取返回 %s-> %s error:%s", method, url, e.Error())
 		return e
@@ -87,7 +85,6 @@ func (es *EsClient) do(method, url string, body interface{}, obj interface{}) er
 
 	e = json.Unmarshal(buf, obj)
 	if e != nil {
-		//fmt.Println("err :", e)
 		drivers.Error("ES 结果转换 %s-> %s error:", method, url, e.Error())
 		return e
 	}
