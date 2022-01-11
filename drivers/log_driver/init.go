@@ -10,11 +10,12 @@ var (
 )
 
 func GetGLog() *def.GLog {
-	if _glog != nil {
+	if _glog == nil {
 		_glog = &def.GLog{
-			Level: def.LOG_LEVEL_DEBUG,
+			Level: 0,
 			Logs:  map[int][]def.LogDriver{},
 		}
+		//_glog = NewGLog(def.LOG_LEVEL_DEBUG)
 	}
 	return _glog
 }

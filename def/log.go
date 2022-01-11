@@ -96,8 +96,10 @@ func (l *GLog) Info(format string, v ...interface{}) {
 }
 func (l *GLog) Debug(format string, v ...interface{}) {
 	if l.Level < LOG_LEVEL_DEBUG {
+		print(l.Logs)
 		return
 	}
+
 	l.Lock()
 	defer l.Unlock()
 	if ls, ok := l.Logs[LOG_LEVEL_DEBUG]; ok {
