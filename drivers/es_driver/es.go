@@ -98,7 +98,6 @@ func (es *EsClient) do(method, url string, body interface{}, obj interface{}) er
 //查询一条记录
 func (es *EsClient) Find(tbName, id string, obj interface{}) error {
 	ret := &esFindResonse{}
-	drivers.Debug("-----")
 	e := es.do(http.MethodGet, es.getHost()+tbName+"/"+id, nil, ret)
 	if e != nil {
 		return e

@@ -96,7 +96,7 @@ func (l *GLog) Info(format string, v ...interface{}) {
 }
 func (l *GLog) Debug(format string, v ...interface{}) {
 	if l.Level < LOG_LEVEL_DEBUG {
-		print(l.Logs)
+		fmt.Printf("Log Level %d %v", l.Level, l)
 		return
 	}
 

@@ -1,28 +1,20 @@
 package mod
 
+import "github.com/ghf-go/nannan/drivers/log_driver"
+
 func Debug(format string, args ...interface{}) {
-	if _log != nil {
-		_log.Debug(format, args...)
-	}
+	log_driver.NewGLog(_logLevle).Debug(format, args...)
 
 }
 func Error(format string, args ...interface{}) {
-	if _log != nil {
-		_log.Error(format, args...)
-	}
+	log_driver.NewGLog(_logLevle).Error(format, args...)
 }
 func Waring(format string, args ...interface{}) {
-	if _log != nil {
-		_log.Waring(format, args...)
-	}
+	log_driver.NewGLog(_logLevle).Waring(format, args...)
 }
 func Info(format string, args ...interface{}) {
-	if _log != nil {
-		_log.Info(format, args...)
-	}
+	log_driver.NewGLog(_logLevle).Info(format, args...)
 }
 func Log(format string, args ...interface{}) {
-	if _log != nil {
-		_log.Log(format, args...)
-	}
+	log_driver.NewGLog(_logLevle).Log(format, args...)
 }

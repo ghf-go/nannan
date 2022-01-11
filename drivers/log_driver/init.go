@@ -20,13 +20,15 @@ func GetGLog() *def.GLog {
 	return _glog
 }
 func NewGLog(level int) *def.GLog {
+
 	if _glog != nil {
 		if _glog.Level != level {
 			_glog.Level = level
 		}
 		return _glog
 	}
-	_glog := &def.GLog{
+
+	_glog = &def.GLog{
 		Level: level,
 		Logs:  map[int][]def.LogDriver{},
 	}
