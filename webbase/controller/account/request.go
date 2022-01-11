@@ -19,3 +19,12 @@ type reqBindMobile struct {
 type reqBaseUid struct {
 	Uid int64 `post:"uid"`
 }
+
+type reqUserProfile struct {
+	Gender   string `post:"gender"`
+	Province string `post:"province"`
+	City     string `post:"city"`
+	Birthday string `post:"birthday"`
+	Avatar   string `post:"avatar"`
+	NickName string `post:"nick_name"`
+}
