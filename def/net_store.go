@@ -1,6 +1,8 @@
-package store_driver
+package def
 
-import "io"
+import (
+	"io"
+)
 
 type NetStore interface {
 	UploadReader(string, io.Reader) error
