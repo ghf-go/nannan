@@ -7,6 +7,7 @@ type Qiniu struct {
 	AccessKey string
 	SecretKey string
 	Bucket    string
+	Zone      string
 	mac       *qbox.Mac
 }
 
