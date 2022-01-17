@@ -2,6 +2,7 @@ package conf_driver
 
 import (
 	"context"
+	"fmt"
 	"github.com/ghf-go/nannan/def"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"strconv"
@@ -26,7 +27,9 @@ func NewEtcdDriver(config clientv3.Config) *EtcdDriver {
 	}
 }
 func NewEtcdDriverByConf(config def.Conf) *EtcdDriver {
-	ec := clientv3.Config{}
+	ec := clientv3.Config{
+		Endpoints: []string{"http://" + config.Host + fmt.Sprintf(":%d", config.Port)},
+	}
 	client, e := clientv3.New(ec)
 	if e != nil {
 		panic(e)
@@ -34,15 +37,16 @@ func NewEtcdDriverByConf(config def.Conf) *EtcdDriver {
 	return &EtcdDriver{
 		client: client,
 		ctx:    context.Background(),
-		path:   config.Path,
+		path:   config.Path + "/",
 		conf:   ec,
 	}
 }
 func (c *EtcdDriver) Get(key string) string {
-	r, e := c.client.Get(c.ctx, c.path+key)
+	r, e := c.client.Get(context.TODO(), c.path+key)
 	if e != nil {
 		return ""
 	}
+	fmt.Printf("%s -> %d --  %v : %v\n", c.path+key, r.Count, r.Header.String(), r.Kvs)
 	return string(r.Kvs[0].Value)
 }
 func (c *EtcdDriver) All() map[string]string {

@@ -13,10 +13,11 @@ func NewConfDriver(data string) def.ConfDriver {
 	conf := def.BuildConf(data)
 	switch conf.Scheme {
 	case "ini":
-		return conf_driver.NewIniDriver(conf.Path)
+		_conf = conf_driver.NewIniDriver(conf.Path)
 	case "etcd":
-		return conf_driver.NewEtcdDriverByConf(conf)
+		_conf = conf_driver.NewEtcdDriverByConf(conf)
 	default:
-		return conf_driver.NewEnvDriver()
+		_conf = conf_driver.NewEnvDriver()
 	}
+	return _conf
 }
