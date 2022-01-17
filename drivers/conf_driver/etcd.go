@@ -37,7 +37,7 @@ func NewEtcdDriverByConf(config def.Conf) *EtcdDriver {
 	return &EtcdDriver{
 		client: client,
 		ctx:    context.Background(),
-		path:   config.Path + "/",
+		path:   "/" + config.Path + "/",
 		conf:   ec,
 	}
 }
@@ -46,7 +46,9 @@ func (c *EtcdDriver) Get(key string) string {
 	if e != nil {
 		return ""
 	}
-	fmt.Printf("%s -> %d --  %v : %v\n", c.path+key, r.Count, r.Header.String(), r.Kvs)
+	if r.Count == 0 {
+		return ""
+	}
 	return string(r.Kvs[0].Value)
 }
 func (c *EtcdDriver) All() map[string]string {
