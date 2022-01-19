@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/ghf-go/nannan/def"
+	"github.com/ghf-go/nannan/drivers"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"strconv"
 )
@@ -44,11 +45,14 @@ func NewEtcdDriverByConf(config def.Conf) *EtcdDriver {
 func (c *EtcdDriver) Get(key string) string {
 	r, e := c.client.Get(context.TODO(), c.path+key)
 	if e != nil {
+		drivers.Error("获取配置错误 %s", e.Error())
 		return ""
 	}
 	if r.Count == 0 {
+		drivers.Debug("--- %v %s", r, r)
 		return ""
 	}
+
 	return string(r.Kvs[0].Value)
 }
 func (c *EtcdDriver) All() map[string]string {

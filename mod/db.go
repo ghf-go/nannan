@@ -16,10 +16,13 @@ var (
 
 //新建数据库链接
 func NewDB(confKeyName string) *sql.DB {
+	if !strings.HasPrefix(confKeyName, "db.") {
+		confKeyName = "db." + confKeyName
+	}
 	conf := GetConf(confKeyName)
 	arrs := strings.Split(conf.Raw, "://")
 	if len(arrs) != 2 {
-		Error("数据库配置错误 %s", conf.Raw)
+		Error("数据库配置错误 %s -> %s", confKeyName, conf.Raw)
 		gutils.Error(500, "数据库配置错误")
 	}
 

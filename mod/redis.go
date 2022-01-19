@@ -16,6 +16,9 @@ var (
 
 // 创建新的redis链接
 func NewReids(confKeyName string) *redis.Client {
+	if !strings.HasPrefix(confKeyName, "redis.") {
+		confKeyName = "redis." + confKeyName
+	}
 	conf := GetConf(confKeyName)
 	switch strings.ToLower(conf.Scheme) {
 	case "redis":

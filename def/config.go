@@ -9,7 +9,10 @@ import (
 func BuildConf(data string) Conf {
 	u, e := url.Parse(data)
 	if e != nil {
-		return Conf{}
+		//fmt.Printf("解析失败 %s %s\n", e.Error(), data)
+		return Conf{
+			Raw: data,
+		}
 	}
 	ret := Conf{
 		Raw:      data,

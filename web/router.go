@@ -1,6 +1,8 @@
 package web
 
 import (
+	"github.com/ghf-go/nannan/gutils"
+	"github.com/ghf-go/nannan/mod"
 	"net/http"
 	"strings"
 	"time"
@@ -47,6 +49,7 @@ func error404(engineCtx *EngineCtx) {
 }
 
 func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+	st := time.Now()
 	engineCtx := &EngineCtx{
 		gresponse: &gresponse{},
 		ReqID:     time.Now().UnixNano(),
@@ -69,5 +72,6 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		}
 		error404(engineCtx)
 	})
-
+	e := time.Now()
+	mod.Debug("[%s] %dms %s", gutils.FormatTime(e), e.Sub(st).Microseconds(), req.URL.Path)
 }

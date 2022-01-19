@@ -32,7 +32,7 @@ func NewGLog(level int) *def.GLog {
 		Level: level,
 		Logs:  map[int][]def.LogDriver{},
 	}
-	_glog.Register(NewLogStdDriver(def.LOG_LEVEL_DEBUG))
+	_glog.Register(NewLogStdDriver(def.LOG_LEVEL_DEBUG, def.LOG_LEVEL_ERROR, def.LOG_LEVEL_LOG, def.LOG_LEVEL_INFO, def.LOG_LEVEL_WARING))
 	return _glog
 }
 func NewLogStdDriver(level ...int) *LogStdDriver {
