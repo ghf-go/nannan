@@ -44,6 +44,8 @@ func RegisterRouter() {
 		group.POST("/group/new", common2.NewGroupAction)       //添加分组
 		group.POST("/confs", common2.ConfListAction)           //配置列表
 		group.POST("/conf/new", common2.NewConfAction)         //配置添加
+		group.POST("/upload/img", common2.UploadImg)           //配置添加
+		group.POST("/upload/video", common2.UploadVideo)       //配置添加
 
 	})
 
